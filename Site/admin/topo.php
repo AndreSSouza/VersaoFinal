@@ -59,6 +59,17 @@ require '../class/config.class.php';
                             </li>						
                         </ul>
                     </li>
+                    <li>
+                        <a href="#">*</a>
+                        <ul>
+                            <li>
+                                <a href="novidades.php?pg=plano">Plano de Aula</a>
+                            </li>
+                            <li>
+                                <a href="#">Data Show</a>
+                            </li>						
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

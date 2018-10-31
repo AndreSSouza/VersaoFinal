@@ -14,9 +14,11 @@
                     <?php
                     if (@$_GET['plano'] != 'null') {
                         $id_plano = @$_GET['plano'];
-                        $consulta_plano = "SELECT pa.id_plano 'id', pa.titulo 'titulo', d.nome_disciplina 'nome_disc', pa.descricao 'descricao' FROM plano_aula pa INNER JOIN disciplina d ON pa.id_disciplina = d.id_disciplina WHERE pa.id_plano = '$id_plano'";
-                        $sql_cons_plano = mysqli_query($conexao, $consulta_plano) or die(mysqli_error($conexao));
-                        $dados_plano = mysqli_fetch_assoc($sql_cons_plano);
+                        $consulta_plano = $crud->select('pa.id_plano id, pa.titulo titulo, d.nome_disciplina nome_disc, pa.descricao descricao', 'plano_aula pa', 'INNER JOIN disciplina d ON pa.id_disciplina = d.id_disciplina WHERE pa.id_plano = ?')->run([$id_plano]);
+                        //$consulta_plano = "SELECT pa.id_plano 'id', pa.titulo 'titulo', d.nome_disciplina 'nome_disc', pa.descricao 'descricao' FROM plano_aula pa INNER JOIN disciplina d ON pa.id_disciplina = d.id_disciplina WHERE pa.id_plano = '$id_plano'";
+                        
+                        $dados_plano = $consulta_plano->fetch(PDO::FETCH_ASSOC);
+                        
                         $nome_disc = $dados_plano['nome_disc'];
                         $titulo = $dados_plano['titulo'];
                         $descricao = $dados_plano['descricao'];
@@ -27,10 +29,11 @@
                             <a class="a2" href="novidades.php?pg=plano&act=more&plano=<?php echo $id_plano; ?>&func=del" title="Excluir este plano de aula">Excluir</a></center>
 
                         <?php
-                        if (@$_GET['func'] == 'del') {
-                            $sql_delete = mysqli_query($conexao, "DELETE FROM plano_aula WHERE id_plano = '$id_plano'");
+                        if (@$_GET['func'] == 'del') {                            
+                            $sql_delete = $crud->delete('plano_aula', 'WHERE id_plano = ?')->run([$id_plano]); 
+                            //mysqli_query($conexao, "DELETE FROM plano_aula WHERE id_plano = '$id_plano'");
                             if (!$sql_delete) {
-                                echo mysqli_errno($conexao) . ": " . mysqli_error($conexao) . "\n";
+                                echo "<script language='javascript'> window.alert('Plano de Aula Deletado com Sucesso!');</script>";
                             } else {
                                 echo "<script language='javascript'> window.alert('Plano de Aula Deletado com Sucesso!');window.location='novidades.php?pg=plano';</script>";
                             }
@@ -51,11 +54,12 @@
                                             <select name="materia" style="width: auto">
 
                                                 <?php
-                                                $sql_select_materias_diferentes = "SELECT id_disciplina, nome_disciplina FROM disciplina WHERE nome_disciplina != '' ORDER BY nome_disciplina";
+                                                $select_mat_dif = $crud->select('id_disciplina, nome_disciplina', 'disciplina', 'WHERE nome_disciplina IS NOT NULL ORDER BY nome_disciplina')->run([]); 
+                                                //$sql_select_materias_diferentes = "SELECT id_disciplina, nome_disciplina FROM disciplina WHERE nome_disciplina != '' ORDER BY nome_disciplina";
                                                 //"SELECT d.id_disciplina 'id_disc' , d.nome_disciplina 'nome_disc' FROM disciplina d INNER JOIN disciplina_ministrada dm ON d.id_disciplina = dm.id_disciplina WHERE d.nome_disciplina <> '' AND dm.id_professor = '$id_professor'"
-                                                $select_materias_diferentes = mysqli_query($conexao, $sql_select_materias_diferentes) or die(mysqli_error($conexao));
+                                                //$select_materias_diferentes = mysqli_query($conexao, $sql_select_materias_diferentes) or die(mysqli_error($conexao));
 
-                                                while ($select_materias_diferentes_valores = mysqli_fetch_assoc($select_materias_diferentes)) {
+                                                while ($select_materias_diferentes_valores = $select_mat_dif->fetch(PDO::FETCH_ASSOC)) {
                                                     $id_disciplina = $select_materias_diferentes_valores['id_disciplina'];
                                                     $nome_disciplina = $select_materias_diferentes_valores['nome_disciplina'];
                                                     ?>
@@ -105,18 +109,20 @@
                         if ($_GET['plano'] == 'null') {
                             $new_disciplina = $_POST['materia'];
                             $id_professor = '1'; //aqui só está recebendo 1 porque ainda não está separado esta parte para o prefessor mas após isso o codigo do professor vai ser colhido ao entrar no sistema
-                            $insert_plano = "INSERT INTO plano_aula (id_professor, id_disciplina, titulo, descricao) VALUES('$id_professor', '$new_disciplina' ,'$new_titulo', '$new_descricao')"; //(id_professor, id_disciplina, titulo, descricao) VALUES($id_professor, $new_disciplina ,$new_titulo, $new_descricao)
-                            $sql_insert = mysqli_query($conexao, $insert_plano);
-                            if (!$sql_insert) {
-                                echo mysqli_errno($conexao) . ": " . mysqli_error($conexao) . "\n";
+                            $insert_plano = $crud->insert('plano_aula', 'id_professor, id_disciplina, titulo, descricao', '(?, ?, ?, ?)')->run([$id_professor, $new_disciplina , $new_titulo, $new_descricao]);
+                            //$insert_plano = "INSERT INTO plano_aula (id_professor, id_disciplina, titulo, descricao) VALUES('$id_professor', '$new_disciplina' ,'$new_titulo', '$new_descricao')"; //(id_professor, id_disciplina, titulo, descricao) VALUES($id_professor, $new_disciplina ,$new_titulo, $new_descricao)
+                            //$sql_insert = mysqli_query($conexao, $insert_plano);
+                            if (!$insert_plano) {
+                                echo "<script language='javascript'> window.alert('Ocorreu um Erro');</script>";
                             } else {
                                 echo "<script language='javascript'> window.alert('Plano de Aula Cadastrado com Sucesso');window.location='novidades.php?pg=plano';</script>";
                             }
                         } else {
                             if (($new_titulo != $titulo) || ($new_descricao != $descricao)) {
-                                $update_plano = "UPDATE plano_aula SET titulo = '$new_titulo', descricao = '$new_descricao' WHERE id_plano = '$id_plano'";
-                                $sql_update = mysqli_query($conexao, $update_plano) or die(mysqli_error($conexao));
-                                if ($sql_update) {
+                                $update_plano = $crud->update('plano_aula', 'titulo = :titulo, descricao = $descricao', 'WHERE id_plano = :id' )->run([':id' => $id_plano, ':titulo' => $new_titulo, ':descricao' => $new_descricao]);
+                                //$update_plano = "UPDATE plano_aula SET titulo = '$new_titulo', descricao = '$new_descricao' WHERE id_plano = '$id_plano'";
+                                //$sql_update = mysqli_query($conexao, $update_plano) or die(mysqli_error($conexao));
+                                if ($update_plano) {
                                     echo "<script language='javascript'> window.alert('atualizado com Sucesso');window.location='novidades.php?pg=plano&act=more&plano=$id_plano';</script>";
                                 }
                             }
@@ -170,4 +176,3 @@
 
 </body>
 </html>
-	
