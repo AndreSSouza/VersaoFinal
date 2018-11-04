@@ -25,11 +25,13 @@ if (empty($login)) {
 if (!is_null($erro)) {
     header("location:login.php?erro=$erro");
 }
-if ($valores['tipo'] == 'ADMINISTRADOR') {
-    echo 'Você está logado com uma conta administrador';
-} else {
-    echo 'Você está logado com uma conta professor';
-}
+ header("location:admin/index.php");
+
+//if ($valores['tipo'] == 'ADMINISTRADOR') {
+//    echo 'Você está logado com uma conta administrador';
+//} else {
+//    echo 'Você está logado com uma conta professor';
+//}
 //    $consulta_login = "SELECT * FROM login WHERE nome_usuario = '$login' AND senha = '$password'";
 //    $resultado_consulta_login = mysqli_query($conexao, $consulta_login);
 //
