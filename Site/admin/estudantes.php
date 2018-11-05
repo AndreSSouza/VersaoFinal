@@ -15,7 +15,7 @@
                         document.getElementById("mostra_nome_aluno").innerHTML = this.responseText;
                     }
                 };
-                xmlhttp.open("GET", "mostraAluno.php?q=" + str, true);
+                xmlhttp.open("GET", "mostraAluno.php?nome=" + str, true);
                 xmlhttp.send();
             }
         </script>
@@ -34,7 +34,7 @@
                     $cod_inscricao = $_GET['inscricao'];
                     date_default_timezone_set("America/Sao_Paulo");
 
-                    $select_inscricao = $crud->select('id_inscricao, data_inscricao, nome_aluno, sexo_aluno, email, telefone_responsavel, celular_responsavel', 'inscricao', 'WHERE id_inscricao = ?')->run([$cod_inscricao]);
+                    $select_inscricao = $crud->select('id_inscricao, data_inscricao, nome_aluno, sexo_aluno, email, telefone_contato, celular_contato', 'inscricao', 'WHERE id_inscricao = ?')->run([$cod_inscricao]);
 
                     $val_select_inscricao = $select_inscricao->fetch(PDO::FETCH_ASSOC);
 
@@ -43,8 +43,8 @@
                     $nome_inscricao = $val_select_inscricao['nome_aluno'];
                     $sexo_inscricao = $val_select_inscricao['sexo_aluno'];
                     $email_inscricao = $val_select_inscricao['email'];
-                    $telefone_inscricao = $val_select_inscricao['telefone_responsavel'];
-                    $celular_inscricao = $val_select_inscricao['celular_responsavel'];
+                    $telefone_inscricao = $val_select_inscricao['telefone_contato'];
+                    $celular_inscricao = $val_select_inscricao['celular_contato'];
                     ?>
 
                     <br/>									
@@ -98,7 +98,7 @@
                     <?php
                     $cod_inscricao = $_GET['inscricao'];
 
-                    $select_inscricao = $crud->select('id_inscricao, data_inscricao, nome_aluno, sexo_aluno, email, telefone_responsavel, celular_responsavel', 'inscricao', 'WHERE id_inscricao = ?')->run([$cod_inscricao]);
+                    $select_inscricao = $crud->select('id_inscricao, data_inscricao, nome_aluno, sexo_aluno, email, telefone_contato, celular_contato', 'inscricao', 'WHERE id_inscricao = ?')->run([$cod_inscricao]);
 
                     $val_select_inscricao = $select_inscricao->fetch(PDO::FETCH_ASSOC);
 
@@ -107,8 +107,8 @@
                     $nome_inscricao = $val_select_inscricao['nome_aluno'];
                     $sexo_inscricao = $val_select_inscricao['sexo_aluno'];
                     $email_inscricao = $val_select_inscricao['email'];
-                    $telefone_inscricao = $val_select_inscricao['telefone_responsavel'];
-                    $celular_inscricao = $val_select_inscricao['celular_responsavel'];
+                    $telefone_inscricao = $val_select_inscricao['telefone_contato'];
+                    $celular_inscricao = $val_select_inscricao['celular_contato'];
                     ?>
 
                     <?php
@@ -120,7 +120,7 @@
                         $telefone_post = $_POST['telefone'];
                         $celular_post = $_POST['celular'];
 
-                        $update_inscricao = $crud->update('inscricao', 'nome_aluno = :nome, sexo_aluno = :sexo, email = :email, telefone_responsavel = :telefone, celular_responsavel = :celular', 'WHERE id_inscricao = :id_inscricao')->run([':nome' => $nome_post, ':sexo' => $sexo_post, ':email' => $email_post, ':telefone' => $telefone_post, ':celular' => $celular_post, ':id_inscricao' => $id_inscricao]);
+                        $update_inscricao = $crud->update('inscricao', 'nome_aluno = :nome, sexo_aluno = :sexo, email = :email, telefone_contato = :telefone, celular_contato = :celular', 'WHERE id_inscricao = :id_inscricao')->run([':nome' => $nome_post, ':sexo' => $sexo_post, ':email' => $email_post, ':telefone' => $telefone_post, ':celular' => $celular_post, ':id_inscricao' => $id_inscricao]);
 
                         echo "<script language='javascript'> window.alert('Atualizado com Sucesso'); window.location='estudantes.php?pg=espera';</script>";
                     }
@@ -304,7 +304,7 @@
                 <a class="a2" href="estudantes.php?pg=espera&amp;cadastra=sim">Cadastrar na lista de espera</a>
 
                 <?php
-                $select_inscricao = $crud->select('id_inscricao, data_inscricao, nome_aluno, email, telefone_responsavel, celular_responsavel', 'inscricao', 'WHERE nome_aluno IS NOT NULL ORDER BY data_inscricao ASC')->run();
+                $select_inscricao = $crud->select('id_inscricao, data_inscricao, nome_aluno, email, telefone_contato, celular_contato', 'inscricao', 'WHERE nome_aluno IS NOT NULL ORDER BY data_inscricao ASC')->run();
 
                 if ($select_inscricao->rowCount() <= 0) {
                     echo "<h2>Não exisite nenhuma inscrição no momento</h2>";
@@ -347,8 +347,8 @@
                             $data_inscricao = $val_select_inscricao['data_inscricao'];
                             $nome_inscricao = $val_select_inscricao['nome_aluno'];
                             $email_inscricao = $val_select_inscricao['email'];
-                            $telefone_inscricao = $val_select_inscricao['telefone_responsavel'];
-                            $celular_inscricao = $val_select_inscricao['celular_responsavel'];
+                            $telefone_inscricao = $val_select_inscricao['telefone_contato'];
+                            $celular_inscricao = $val_select_inscricao['celular_contato'];
                             ?>
 
                             <tr <?php echo $class; ?> >
@@ -406,10 +406,9 @@
 
                 $cod_aluno = $_GET['aluno'];
 
-                $select_tudo_aluno = $crud->select('a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_responsavel telefone_responsavel, i.celular_responsavel celular_responsavel, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.sexo_responsavel sexo_responsavel, r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, a.logradouro_aluno logradouro_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, m.data_matricula dt_matricula, t.nome_turma nome_turma, m.id_turma id_turma', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao'
+                $select_tudo_aluno = $crud->select('a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_contato telefone_contato, i.celular_contato celular_contato, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.data_nascimento_responsavel, r.sexo_responsavel sexo_responsavel, r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, a.rua_aluno rua_aluno, a.numero_aluno numero_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, a.data_matricula dt_matricula, t.nome_turma nome_turma, a.id_turma id_turma', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao'
                                 . ' INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel'
-                                . ' INNER JOIN matricula m ON a.id_aluno = m.id_aluno'
-                                . ' INNER JOIN turma t ON m.id_turma = t.id_turma'
+                                . ' INNER JOIN turma t ON a.id_turma = t.id_turma'
                                 . ' WHERE a.id_aluno = :id_aluno')
                         ->run([':id_aluno' => $cod_aluno]);
                 $dados = $select_tudo_aluno->fetch(PDO::FETCH_ASSOC);
@@ -421,23 +420,33 @@
                 $data_nascimento_A = $dados['data_nascimento'];
                 $data_nascimento_A = date('d/m/Y', strtotime($data_nascimento_A));
 
+                //Descorindo a Idade atraves da data de nascimento
+                
                 list($dia, $mes, $ano) = explode('/', $data_nascimento_A);
                 $dt_hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
                 $dt_nascimento_aluno = mktime(0, 0, 0, $mes, $dia, $ano);
                 $idade_A = floor((((($dt_hoje - $dt_nascimento_aluno) / 60) / 60) / 24) / 365.25);
+                                
+                $dt_nascimento_R = $dados['data_nascimento_responsavel'];
+                $dt_nascimento_R = date('d/m/Y', strtotime($dt_nascimento_R));
+
+                list($dia, $mes, $ano) = explode('/', $dt_nascimento_R);
+                $dt_nascimento_responsavel = mktime(0, 0, 0, $mes, $dia, $ano);
+                $idade_R = floor((((($dt_hoje - $dt_nascimento_responsavel) / 60) / 60) / 24) / 365.25);
 
                 $RG_A = $dados['rg_aluno'];
                 $CPF_A = $dados['cpf_aluno'];
                 $email_A = $dados['email_aluno'];
                 $email_R = $dados['email_responsavel'];
-                $telefone_R = $dados['telefone_responsavel'];
-                $celular_R = $dados['celular_responsavel'];
+                $telefone_R = $dados['telefone_contato'];
+                $celular_R = $dados['celular_contato'];
                 $cod_responsavel = $dados['cod_responsavel'];
                 $nome_R = $dados['nome_responsavel'];
                 $sexo_R = $dados['sexo_responsavel'];
                 $rg_R = $dados['rg_responsavel'];
                 $cpf_R = $dados['cpf_responsavel'];
-                $logradouro_A = $dados['logradouro_aluno'];
+                $rua_A = $dados['rua_aluno'];
+                $numero_A = $dados['numero_aluno'];
                 $bairro_A = $dados['bairro_aluno'];
                 $cidade_A = $dados['cidade_aluno'];
                 $complemento_A = $dados['complemento_aluno'];
@@ -456,11 +465,11 @@
                 $faltas = $val_faltas['faltas'];
 
                 //quantidade de aulas já dadas
-                $select_qtde_aulas = $crud->select('COUNT(DISTINCT(c.data_chamada)) AS "aulas_dadas"', 'chamada c', 'INNER JOIN matricula m ON m.id_aluno = c.id_aluno WHERE (c.data_chamada BETWEEN m.data_matricula AND CURRENT_DATE) AND c.id_aluno = :id_aluno')->run([':id_aluno' => $cod_aluno]);
+                $select_qtde_aulas = $crud->select('COUNT(DISTINCT(c.data_chamada)) AS aulas_dadas', 'chamada c', 'INNER JOIN aluno a ON a.id_aluno = c.id_aluno WHERE (c.data_chamada BETWEEN a.data_matricula AND CURRENT_DATE) AND c.id_aluno = ?')->run([$cod_aluno]);
                 $val_aulas_dadas = $select_qtde_aulas->fetch(PDO::FETCH_ASSOC);
                 $qtde_aulas = $val_aulas_dadas['aulas_dadas'];
 
-                $chamada = $crud->select('c.data_chamada data_chamada, t.nome_turma nome_turma, p.nome_professor nome_professor, i.nome_aluno nome_aluno, c.presenca presenca', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel INNER JOIN matricula m ON a.id_aluno = m.id_aluno INNER JOIN turma t ON m.id_turma = t.id_turma INNER JOIN chamada c ON c.id_aluno = a.id_aluno INNER JOIN professor p ON p.id_professor = c.id_professor WHERE (c.data_chamada BETWEEN m.data_matricula AND CURRENT_DATE) AND a.id_aluno = :id_aluno AND m.id_turma = :id_turma ORDER BY c.data_chamada')->run([':id_aluno' => $cod_aluno, ':id_turma' => $cod_turma]);
+                $chamada = $crud->select('c.data_chamada data_chamada, t.nome_turma nome_turma, p.nome_professor nome_professor, i.nome_aluno nome_aluno, c.presenca presenca', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel INNER JOIN turma t ON a.id_turma = t.id_turma INNER JOIN chamada c ON c.id_aluno = a.id_aluno INNER JOIN professor p ON p.id_professor = c.id_professor WHERE (c.data_chamada BETWEEN a.data_matricula AND CURRENT_DATE) AND a.id_aluno = :id_aluno AND a.id_turma = :id_turma ORDER BY c.data_chamada')->run([':id_aluno' => $cod_aluno, ':id_turma' => $cod_turma]);
                 ?>
 
                 <table border="0">
@@ -540,7 +549,7 @@
                             <input type="text" value="<?php echo $nome_R; ?>" disabled >
                         </td>
                         <td>							
-                            <input type="text" value="Falta Inplementar o campo data de nascimento na tabela professor" disabled>
+                            <input type="text" value="<?php echo $dt_nascimento_R; ?>" disabled>
                         </td>
                         <td>							
                             <input type="text" value="<?php echo $sexo_R; ?>" disabled>
@@ -553,7 +562,7 @@
                     </tr>
                     <tr>
                         <td>							
-                            <input type="text" value="falta implementar o campo data de nascimento na tabela professor" disabled >
+                            <input type="text" value="<?php echo $idade_R; ?>" disabled >
                         </td>
                         <td>													
                             <input type="text" value="<?php echo $rg_R; ?>" disabled >
@@ -572,8 +581,8 @@
                     <tr>
                         <td>E-mail do Aluno:</td>
                         <td>E-mail do Responsavel:</td>
-                        <td>Telefone do Responsavel:</td>
-                        <td>Celular do Responsavel:</td>								
+                        <td>Telefone para Contato:</td>
+                        <td>Celular para Contato:</td>								
                     </tr>
                     <tr>
                         <td>							
@@ -603,10 +612,10 @@
                     </tr>
                     <tr>
                         <td>							
-                            <input type="text" value="<?php echo $logradouro_A; ?>" disabled >
+                            <input type="text" value="<?php echo $rua_A; ?>" disabled >
                         </td>
                         <td>
-                            <input type="text" value="<?php echo $logradouro_A; ?>" disabled >
+                            <input type="text" value="<?php echo $numero_A; ?>" disabled >
                         </td>
                         <td>
                             <input type="text" value="<?php echo $bairro_A; ?>" disabled >
@@ -734,37 +743,45 @@
             if (@$_GET['mod'] == 'atualiza') {
 
                 $cod_aluno = $_GET['aluno'];
-                    
-                $select_tudo_aluno = $crud->select('a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_responsavel telefone_responsavel, i.celular_responsavel celular_responsavel, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.sexo_responsavel sexo_responsavel, r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, a.logradouro_aluno logradouro_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, m.data_matricula dt_matricula, t.nome_turma nome_turma, m.id_turma id_turma', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao'
+                
+                $select_tudo_aluno = $crud->select('a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_contato telefone_contato, i.celular_contato celular_contato, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.data_nascimento_responsavel, r.sexo_responsavel sexo_responsavel, r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, a.rua_aluno rua_aluno, a.numero_aluno numero_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, a.data_matricula dt_matricula, t.nome_turma nome_turma, a.id_turma id_turma', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao'
                                 . ' INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel'
-                                . ' INNER JOIN matricula m ON a.id_aluno = m.id_aluno'
-                                . ' INNER JOIN turma t ON m.id_turma = t.id_turma'
+                                . ' INNER JOIN turma t ON a.id_turma = t.id_turma'
                                 . ' WHERE a.id_aluno = :id_aluno')
                         ->run([':id_aluno' => $cod_aluno]);
+                
                 $dados = $select_tudo_aluno->fetch(PDO::FETCH_ASSOC);
-
+                
+                $cod_inscricao = $dados['cod_inscricao'];
+                $dt_inscricao = $dados['dt_inscricao'];
                 $cod_aluno = $dados['cod_aluno'];
                 $nome_A = $dados['nome'];
                 $sexo_A = $dados['sexo_aluno'];
                 $data_nascimento_A = $dados['data_nascimento'];
+                $dt_nascimento_R = $dados['data_nascimento_responsavel'];
                 $RG_A = $dados['rg_aluno'];
                 $CPF_A = $dados['cpf_aluno'];
                 $email_A = $dados['email_aluno'];
                 $email_R = $dados['email_responsavel'];
-                $telefone_R = $dados['telefone_responsavel'];
-                $celular_R = $dados['celular_responsavel'];
+                $telefone_R = $dados['telefone_contato'];
+                $celular_R = $dados['celular_contato'];
                 $cod_responsavel = $dados['cod_responsavel'];
                 $nome_R = $dados['nome_responsavel'];
                 $sexo_R = $dados['sexo_responsavel'];
                 $rg_R = $dados['rg_responsavel'];
                 $cpf_R = $dados['cpf_responsavel'];
-                $logradouro_A = $dados['logradouro_aluno'];
+                $rua_A = $dados['rua_aluno'];
+                $numero_A = $dados['numero_aluno'];
                 $bairro_A = $dados['bairro_aluno'];
                 $cidade_A = $dados['cidade_aluno'];
                 $complemento_A = $dados['complemento_aluno'];
                 $cep_A = $dados['cep_aluno'];
                 $escola_A = $dados['escola_aluno'];
                 $escolaridade_A = $dados['escolaridade_aluno'];
+                $matriculado = $dados['matriculado'];
+                $dt_matricula = $dados['dt_matricula'];
+                $nome_turma = $dados['nome_turma'];
+                $cod_turma = $dados['id_turma'];
                 ?>
                 <br><br>
 
@@ -843,7 +860,7 @@
                                 <input type="text" name="nomeR" value="<?php echo $nome_R; ?>"  >
                             </td> 
                             <td>
-                                <input type="text" value="Falta Inplementar o campo data de nascimento na tabela responsavel" disabled>
+                                <input type="date" name="dtNascResp" value="<?php echo $dt_nascimento_R; ?>" >
                             </td>
                             <td>
                                 <select name="sexoR" size="1" id="">
@@ -887,8 +904,8 @@
                         </tr>
                         <tr>
                             <td>E-mail do responsavel:</td>
-                            <td>Telefone do responsavel:</td>
-                            <td>Celular do responsavel:</td>
+                            <td>Telefone para Contato:</td>
+                            <td>Celular para Contato:</td>
                         </tr>
                         <tr>
                             <td>
@@ -915,10 +932,10 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" name="ruaA" value="<?php echo $logradouro_A; ?>" />
+                                <input type="text" name="ruaA" value="<?php echo $rua_A; ?>" />
                             </td>
                             <td>
-                                <input type="" name="numeroA" value="<?php echo $logradouro_A; ?>" />
+                                <input type="" name="numeroA" value="<?php echo $numero_A; ?>" />
                             </td>
                             <td>		
                                 <input type="text" name="bairroA" value="<?php echo $bairro_A; ?>" />
@@ -965,26 +982,27 @@
                     $cpfA = $_POST['cpfA'];
                     $emailA = $_POST['emailA'];
                     $nomeR = $_POST['nomeR'];
+                    $dtNascimentoR = $_POST['dtNascResp'];
                     $sexoR = $_POST['sexoR'];
                     $emailR = $_POST['emailR'];
                     $rgR = $_POST['rgR'];
                     $cpfR = $_POST['cpfR'];
                     $telefoneR = $_POST['telefoneR'];
                     $celularR = $_POST['celularR'];
-                    //$ruaA = $_POST['ruaA'];
+                    $ruaA = $_POST['ruaA'];
                     $numeroA = $_POST['numeroA'];
                     $bairroA = $_POST['bairroA'];
                     $cidadeA = $_POST['cidadeA'];
                     $complementoA = $_POST['complementoA'];
                     $cepA = $_POST['cepA'];
 
-                    if (($nomeA != $nome_A) || ($sexoA != $sexo_A) || ($dtNascimentoA != $data_nascimento_A) || ($rgA != $RG_A) || ($cpfA != $CPF_A) || ($emailA != $email_A) || ($nomeR != $nome_R) || ($sexoR != $sexo_R) || ($emailR != $email_R) || ($telefoneR != $telefone_R) || ($celularR != $celular_R) || ($numeroA != $logradouro_A) || ($bairroA = $bairro_A) || ($cidadeA != $cidade_A) || ($complementoA != $complemento_A) || ($cepA != $cep_A)) {
+                    if (($nomeA != $nome_A) || ($sexoA != $sexo_A) || ($dtNascimentoA != $data_nascimento_A) || ($rgA != $RG_A) || ($cpfA != $CPF_A) || ($emailA != $email_A) || ($nomeR != $nome_R) || ($sexoR != $sexo_R) || ($emailR != $email_R) || ($telefoneR != $telefone_R) || ($celularR != $celular_R) || ($ruaA != $rua_A) || ($numeroA != $numero_A) || ($dt_nascimento_R != $dtNascimentoR) || ($bairroA = $bairro_A) || ($cidadeA != $cidade_A) || ($complementoA != $complemento_A) || ($cepA != $cep_A)) {
 
-                        $update_inscricao = $crud->update('inscricao i', 'i.nome_aluno = :nomeA, i.sexo_aluno = :sexoA, i.email = :emailA, i.telefone_responsavel = :telefoneR, i.celular_responsavel = :celularR', 'WHERE i.id_aluno = :id_aluno')->run([':id_aluno' => $cod_aluno, 'nomeA' => $nomeA, ':emailA' => $emailA, ':telefoneR' => $telefoneR, ':celularR' => $celularR]);
+                        $update_inscricao = $crud->update('inscricao i', 'i.nome_aluno = :nomeA, i.sexo_aluno = :sexoA, i.email = :emailA, i.telefone_contato = :telefoneC, i.celular_contato = :celularC', 'WHERE i.id_inscricao = :id_inscricao')->run([':id_inscricao' => $cod_inscricao, 'nomeA' => $nomeA, ':sexoA' => $sexoA, ':emailA' => $emailA, ':telefoneC' => $telefoneR, ':celularC' => $celularR]);
 
-                        $update_aluno = $crud->select('aluno a', 'a.data_nascimento_aluno = :dtNascimentoA, a.rg_aluno = :rgA, a.cpf = :cpfA, a.logradouro_aluno = :numeroA, a.bairro_aluno = :bairroA, a.cidade_aluno = :cidadeA, a.complemento_aluno = :complementoA, a.cep_aluno = :cepA', 'WHERE a.id_aluno = :id_aluno')->run([':id_aluno' => $cod_aluno, ':dtNascimentoA' => $dtNascimentoA, ':rgA' => $rgA, ':cpfA' => $cpfA, ':numeroA' => $numeroA, ':bairroA' => $bairroA, ':bairroA' => $bairroA, 'cidadeA' => $cidadeA, ':complementoA' => $complementoA, ':cepA' => $cepA]);
+                        $update_aluno = $crud->update('aluno a', 'a.data_nascimento_aluno = :dtNascimentoA, a.rg_aluno = :rgA, a.cpf = :cpfA, a.rua_aluno = :ruaA, a.numero_aluno = :numeroA, a.bairro_aluno = :bairroA, a.cidade_aluno = :cidadeA, a.complemento_aluno = :complementoA, a.cep_aluno = :cepA', 'WHERE a.id_aluno = :id_aluno')->run([':id_aluno' => $cod_aluno, ':dtNascimentoA' => $dtNascimentoA, ':rgA' => $rgA, ':cpfA' => $cpfA, ':ruaA' => $ruaA, ':numeroA' => $numeroA, ':bairroA' => $bairroA, 'cidadeA' => $cidadeA, ':complementoA' => $complementoA, ':cepA' => $cepA]);
 
-                        $update_responsavel = $crud->update('responsavel r', 'r.nome_responsavel = :nomeR, r.sexo_responsavel = :sexoR, r.email = :emailR, r.rg_responsavel = :rgR, r.cpf = :cpfR', 'WHERE r.id_responsavel = :id_responsavel')->run([':id_responsavel' => $cod_responsavel, ':nomeR' => $nomeR, ':sexoR' => $sexoR, ':emailR' => $emailR, ':rgR' => $rgR, ':cpfR' => $cpfR]);
+                        $update_responsavel = $crud->update('responsavel r', 'r.nome_responsavel = :nomeR, r.data_nascimento_responsavel = :dtNascR, r.sexo_responsavel = :sexoR, r.email = :emailR, r.rg_responsavel = :rgR, r.cpf = :cpfR', 'WHERE r.id_responsavel = :id_responsavel')->run([':id_responsavel' => $cod_responsavel, ':nomeR' => $nomeR, ':dtNascR' => $dtNascimentoR, ':sexoR' => $sexoR, ':emailR' => $emailR, ':rgR' => $rgR, ':cpfR' => $cpfR]);
 
                         echo "<script language='javascript'> window.alert('Aluno(a) atualizado(a) com Sucesso!'); window.location='estudantes.php?pg=aluno';</script>";
                     }
@@ -1004,7 +1022,8 @@
                         $data_nascimento_aluno = $_POST['data_nascimento_aluno'];
                         $rg_aluno = $_POST['rg_aluno'];
                         $cpf_aluno = $_POST['cpf_aluno'];
-                        $logradouro = $_POST['logradouro_aluno'];
+                        $rua = $_POST['rua_aluno'];
+                        $numero = $_POST['numero_aluno'];
                         $bairro_aluno = $_POST['bairro_aluno'];
                         $cidade_aluno = $_POST['cidade_aluno'];
                         $complemento_aluno = $_POST['complemento_aluno'];
@@ -1012,7 +1031,7 @@
                         $escolaridade = $_POST['escolaridade'];
                         $escola = $_POST['escola'];
 
-                        $insert_aluno = $crud->insert('aluno', 'id_inscricao, data_nascimento_aluno, rg_aluno, cpf, logradouro_aluno, bairro_aluno, cidade_aluno, complemento_aluno, cep_aluno, escolaridade, escola', '(:id_inscricao, :data_nascimento_aluno, :rg_aluno, :cpf_aluno, :logradouro_aluno, :bairro_aluno, :cidade_aluno, :complemento_aluno, :cep_aluno, :escolaridade, :escola)')->run([':id_inscricao' => $id_inscricao, ':data_nascimento_aluno' => $data_nascimento_aluno, ':rg_aluno' => $rg_aluno, ':cpf_aluno' => $cpf_aluno, ':logradouro_aluno' => $logradouro, ':bairro_aluno' => $bairro_aluno, ':cidade_aluno' => $cidade_aluno, ':complemento_aluno' => $complemento_aluno, ':cep_aluno' => $cep_aluno, ':escolaridade' => $escolaridade, ':escola' => $escola]);
+                        $insert_aluno = $crud->insert('aluno', 'id_inscricao, data_nascimento_aluno, rg_aluno, cpf, rua_aluno, numero_aluno, bairro_aluno, cidade_aluno, complemento_aluno, cep_aluno, escolaridade, escola', '(:id_inscricao, :data_nascimento_aluno, :rg_aluno, :cpf_aluno, :rua_aluno, :numero_aluno, :bairro_aluno, :cidade_aluno, :complemento_aluno, :cep_aluno, :escolaridade, :escola)')->run([':id_inscricao' => $id_inscricao, ':data_nascimento_aluno' => $data_nascimento_aluno, ':rg_aluno' => $rg_aluno, ':cpf_aluno' => $cpf_aluno, ':rua_aluno' => $rua, ':numero_aluno' => $numero, ':bairro_aluno' => $bairro_aluno, ':cidade_aluno' => $cidade_aluno, ':complemento_aluno' => $complemento_aluno, ':cep_aluno' => $cep_aluno, ':escolaridade' => $escolaridade, ':escola' => $escola]);
 
                         if ($insert_aluno->rowCount() <= 0) {
                             echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
@@ -1069,12 +1088,14 @@
                             <tr>
                                 <td>RG:</td>
                                 <td>CPF:</td>
-                                <td>Logradouro:</td>
+                                <td>Rua:</td>
+                                <td>Número:</td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="rg_aluno" maxlength="14"/></td>
                                 <td><input type="text" name="cpf_aluno" maxlength="11"/></td>
-                                <td><input type="text" name="logradouro_aluno"/></td>
+                                <td><input type="text" name="rua_aluno" maxlength="11"/></td>
+                                <td><input type="text" name="numero_aluno"/></td>
                             </tr>
                             <tr>														  	
                                 <td>Bairro:</td>
@@ -1117,12 +1138,13 @@
                         $id_inscricao = $_GET['inscricao'];
                         $id_responsavel = $_POST['id_responsavel'];
                         $nome_responsavel = $_POST['nome_responsavel'];
+                        $data_nascimento_responsavel = $_POST['data_nasc_resp'];
                         $sexo_responsavel = $_POST['sexo_responsavel'];
                         $cpf_responsavel = $_POST['cpf_responsavel'];
                         $rg_responsavel = $_POST['rg_responsavel'];
                         $email_responsavel = $_POST['email_responsavel'];
 
-                        $insert_responsavel = $crud->insert('responsavel', 'nome_responsavel, sexo_responsavel, cpf, rg_responsavel, email', '(:nome, :sexo, :cpf, :rg, :email)')->run([':nome' => $nome_responsavel, ':sexo' => $sexo_responsavel, ':cpf' => $cpf_responsavel, ':rg' => $rg_responsavel, ':email' => $email_responsavel]);;
+                        $insert_responsavel = $crud->insert('responsavel', 'nome_responsavel, data_nascimento_responsavel, sexo_responsavel, cpf, rg_responsavel, email', '(:nome, :data, :sexo, :cpf, :rg, :email)')->run([':nome' => $nome_responsavel, ':data' => $data_nascimento_responsavel, ':sexo' => $sexo_responsavel, ':cpf' => $cpf_responsavel, ':rg' => $rg_responsavel, ':email' => $email_responsavel]);;
                         if ($insert_responsavel->rowCount() <= 0) {
                             echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
                         } else {
@@ -1143,6 +1165,7 @@
                                 <td><b>Código do responsável:</b></td>			
                                 <td>Nome do responsável:</td>
                                 <td>Sexo do responsável:</td>
+                                <td>data de Nascimento do Responsavel:</td>
                             </tr>
                             <tr>
                                 <?php 
@@ -1167,7 +1190,8 @@
                                         <option value="FEMININO">Feminino</option>
                                         <option value="OUTRO">Outro</option>
                                     </select>
-                                </td>      						
+                                </td>
+                                <td><input type="date" name="data_nasc_resp" /></td>     
                             </tr>
                             <tr>
                                 <td>CPF do responsável:</td>
@@ -1234,8 +1258,8 @@
                                 <td><center><?php echo $val_inscricao_aluno['nome_aluno']; ?></center></td>
                                 <td><center><?php echo $val_inscricao_aluno['rg_aluno']; ?></center></td>
                                 <td><center><?php echo $val_inscricao_aluno['cpf']; ?></center></td>
-                                <td><center><?php echo $val_inscricao_aluno['telefone_responsavel']; ?></center></td>
-                                <td><center><?php echo $val_inscricao_aluno['celular_responsavel']; ?></center></td>
+                                <td><center><?php echo $val_inscricao_aluno['telefone_contato']; ?></center></td>
+                                <td><center><?php echo $val_inscricao_aluno['celular_contato']; ?></center></td>
                                 <td>
                                     <center>									
                                         <a href="estudantes.php?pg=aluno&mod=visualiza&aluno=<?php echo $val_inscricao_aluno['id_aluno']; ?>" ><img title="Visualizar" src="img/lupa_turma.png" width="18" height="18" border="0"></a>
