@@ -27,7 +27,8 @@
                     $sexo_prof = $prof_val['sexo_professor'];
                     $cpf_prof = $prof_val['cpf'];
                     $rg_prof = $prof_val['rg_professor'];
-                    $logra_prof = $prof_val['logradouro_professor'];
+                    $rua_prof = $prof_val['rua_professor'];
+                    $numero_prof = $prof_val['numero_professor'];
                     $bairro_prof = $prof_val['bairro_professor'];
                     $cidade_prof = $prof_val['cidade_professor'];
                     $compl_prof = $prof_val['complemento_professor'];
@@ -96,13 +97,17 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Logradouro:</td>
+                            <td>Rua:</td>
+                            <td>Número:</td>
                             <td>Bairro:</td>
                             <td>Cidade:</td>
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" disabled name="logradouro_professor" id="textfield6" value="<?php echo $logra_prof; ?>">
+                                <input type="text" disabled name="rua_professor" id="textfield6" value="<?php echo $rua_prof; ?>">
+                            </td>
+                            <td>
+                                <input type="text" disabled name="numero_professor" id="textfield6" value="<?php echo $numero_prof; ?>">
                             </td>						
                             <td>
                                 <input type="text" disabled name="bairro_professor" id="textfield8" value="<?php echo $bairro_prof; ?>">
@@ -216,7 +221,8 @@
                     $sexo_prof = $prof_val['sexo_professor'];
                     $cpf_prof = $prof_val['cpf'];
                     $rg_prof = $prof_val['rg_professor'];
-                    $logra_prof = $prof_val['logradouro_professor'];
+                    $rua_prof = $prof_val['rua_professor'];
+                    $numero_prof = $prof_val['numero_professor'];
                     $bairro_prof = $prof_val['bairro_professor'];
                     $cidade_prof = $prof_val['cidade_professor'];
                     $compl_prof = $prof_val['complemento_professor'];
@@ -234,7 +240,8 @@
                         $sexo_professor = $_POST['sexo_professor'];
                         $cpf_professor = $_POST['cpf_professor'];
                         $rg_professor = $_POST['rg_professor'];
-                        $logradouro_professor = $_POST['logradouro_professor'];
+                        $rua_professor = $prof_val['rua_professor'];
+                        $numero_professor = $prof_val['numero_professor'];
                         $bairro_professor = $_POST['bairro_professor'];
                         $cidade_professor = $_POST['cidade_professor'];
                         $complemento_professor = $_POST['complemento_professor'];
@@ -314,22 +321,26 @@
                                     <input type="text" name="rg_professor" id="textfield5" maxlength="14" value="<?php echo $rg_prof; ?>">
                                 </td>
                             </tr>
-                            <tr>
-                                <td>Logradouro:</td>
-                                <td>Bairro:</td>
-                                <td>Cidade:</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" name="logradouro_professor" id="textfield6" value="<?php echo $logra_prof; ?>">
-                                </td>						
-                                <td>
-                                    <input type="text" name="bairro_professor" id="textfield8" value="<?php echo $bairro_prof; ?>">
-                                </td>
-                                <td>
-                                    <input type="text" name="cidade_professor" id="textfield6" value="<?php echo $cidade_prof; ?>">
-                                </td>
-                            </tr>
+                           <tr>
+                            <td>Rua:</td>
+                            <td>Número:</td>
+                            <td>Bairro:</td>
+                            <td>Cidade:</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" name="rua_professor" id="textfield6" value="<?php echo $rua_prof; ?>">
+                            </td>
+                            <td>
+                                <input type="text" name="numero_professor" id="textfield6" value="<?php echo $numero_prof; ?>">
+                            </td>						
+                            <td>
+                                <input type="text" name="bairro_professor" id="textfield8" value="<?php echo $bairro_prof; ?>">
+                            </td>
+                            <td>
+                                <input type="text" name="cidade_professor" id="textfield6" value="<?php echo $cidade_prof; ?>">
+                            </td>
+                        </tr>
                             <tr>		
                                 <td>Complemento:</td>
                                 <td>CEP:</td>
@@ -480,7 +491,8 @@
                     $sexo_professor = $_POST['sexo_professor'];
                     $cpf_professor = $_POST['cpf_professor'];
                     $rg_professor = $_POST['rg_professor'];
-                    $logradouro_professor = $_POST['logradouro_professor'];
+                    $rua_professor = $_POST['rua_professor'];
+                    $numero_professor = $_POST['numero_professor'];
                     $bairro_professor = $_POST['bairro_professor'];
                     $cidade_professor = $_POST['cidade_professor'];
                     $complemento_professor = $_POST['complemento_professor'];
@@ -490,7 +502,7 @@
                     $email_professor = $_POST['email_professor'];
                     $formacao_professor = $_POST['formacao_professor'];
 
-                    $insert_professor = $crud->insert('professor', 'data_nascimento_professor, nome_professor, sexo_professor, cpf, rg_professor, logradouro_professor, bairro_professor, cidade_professor, complemento_professor, cep_professor, telefone_professor, celular_professor, email, formacao', '(:dt_nasc, :nome, :sexo, :cpf, :rg, :log, :bairro,  :cidade, :comp, :cep, :tel, :cel, :email, :formacao')->run([':dt_nasc' => $data_nascimento_professor, ':nome' => $nome_professor, ':sexo' => $sexo_professor, ':cpf' => $cpf_professor, ':rg' => $rg_professor, ':log' => $logradouro_professor, ':bairro' => $bairro_professor, ':cidade' => $cidade_professor, ':comp' => $complemento_professor, ':cep' => $cep_professor, ':tel' => $telefone_professor, ':cel' => $celular_professor, ':email' => $email_professor, ':formacao' => $formacao_professor]);
+                    $insert_professor = $crud->insert('professor', 'data_nascimento_professor, nome_professor, sexo_professor, cpf, rg_professor, rua_professor, numero_professor, bairro_professor, cidade_professor, complemento_professor, cep_professor, telefone_professor, celular_professor, email, formacao', '(:dt_nasc, :nome, :sexo, :cpf, :rg, :rua, :num, :bairro,  :cidade, :comp, :cep, :tel, :cel, :email, :formacao')->run([':dt_nasc' => $data_nascimento_professor, ':nome' => $nome_professor, ':sexo' => $sexo_professor, ':cpf' => $cpf_professor, ':rg' => $rg_professor, ':rua' => $rua_professor, ':num' => $numero_professor, ':bairro' => $bairro_professor, ':cidade' => $cidade_professor, ':comp' => $complemento_professor, ':cep' => $cep_professor, ':tel' => $telefone_professor, ':cel' => $celular_professor, ':email' => $email_professor, ':formacao' => $formacao_professor]);
 
 
                     //$sql_insert_professor = "INSERT INTO professor (data_nascimento_professor, nome_professor, sexo_professor, cpf, rg_professor, logradouro_professor, bairro_professor, cidade_professor, complemento_professor, cep_professor, telefone_professor, celular_professor, email, formacao) VALUES ('$data_nascimento_professor', '$nome_professor', '$sexo_professor', '$cpf_professor', '$rg_professor', '$logradouro_professor', '$bairro_professor', '$cidade_professor', '$complemento_professor','$cep_professor', '$telefone_professor', '$celular_professor', '$email_professor','$formacao_professor')";
@@ -558,13 +570,17 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Logradouro:</td>
+                                            <td>Rua:</td>
+                                            <td>Número:</td>
                                             <td>Bairro:</td>
                                             <td>Cidade:</td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" name="logradouro_professor" id="textfield6">
+                                                <input type="text" name="rua_professor" id="textfield6">
+                                            </td>						
+                                            <td>
+                                                <input type="text" name="numero_professor" id="textfield6">
                                             </td>						
                                             <td>
                                                 <input type="text" name="bairro_professor" id="textfield8">
@@ -653,7 +669,7 @@
                                                         <td colspan="2"><center><strong><i>Professores que Ministram esta Disciplina</i></strong></center></td>
                                                     </tr>
                                                     <?php
-                                                    $disc_dis = $crud->select('dm.id_professor, nome_professor', 'disciplina_ministrada dm', 'INNER JOIN disciplina d on d.id_disciplina = dm.id_disciplina INNER JOIN professor p ON dm.id_professor = p.id_professor WHERE d.id_disciplina = ?')->run([$cod_disc]);
+                                                    $disc_dis = $crud->select('dm.id_professor, p.nome_professor', 'disciplina_ministrada dm', 'INNER JOIN disciplina d on d.id_disciplina = dm.id_disciplina INNER JOIN professor p ON dm.id_professor = p.id_professor WHERE d.id_disciplina = ?')->run([$cod_disc]);
                                                     //$disc_dis = "SELECT * FROM disciplina_ministrada dm INNER JOIN disciplina d on d.id_disciplina = dm.id_disciplina INNER JOIN professor p ON dm.id_professor = p.id_professor WHERE d.id_disciplina= '$cod_disc'";
 
                                                     //$sql_disc = mysqli_query($conexao, $disc_dis)or die(mysqli_error($conexao));
@@ -725,7 +741,7 @@
                                                             <td colspan="2"><center><strong><i>Atualizar Disciplina -> <?php echo $nome_disc; ?></i></strong></center></td>							
                                                         </tr>
                                                         <tr>
-                                                            <td><center><strong><i>Nome ::</i></strong></center></td>						
+                                                            <td><center><strong><i>Nome :</i></strong></center></td>						
                                                             <td>
                                                                 <input type="text" name="nome_disc" id="textfield" value="<?php echo $nome_disc; ?>">
                                                             </td>
@@ -908,7 +924,7 @@
                                             <!VISUALIZAR OS PROFESSORES & MATERIAS CADASTRADOS>
 
                                             <?php
-                                            $select_disc_min = $crud->select('*', 'disciplina_ministrada dm', 'INNER JOIN disciplina d ON d.id_disciplina = dm.id_disciplina INNER JOIN professor p ON p.id_professor = dm.id_professor')->run([@$cod_professor]);
+                                            $select_disc_min = $crud->select('*', 'disciplina_ministrada dm', 'INNER JOIN disciplina d ON d.id_disciplina = dm.id_disciplina INNER JOIN professor p ON p.id_professor = dm.id_professor')->run([]);
 
                                             if ($select_disc_min->rowCount() <= 0) {
                                                 echo "<br/><br/>No momento não existe nenhuma matéria cadastrada!<br/><br/>";
@@ -944,15 +960,13 @@
 
                                     <!CADASTRO DE PROFESSORES & MATERIAS>
 
-                                    <?php /* if (@$_GET['pg'] == 'cadastra_disciplinas_ministradas') { ?>			
+                                    <?php  if (@$_GET['pg'] == 'cadastra_disciplinas_ministradas') { ?>			
                                         <div id="box_curso">	
                                             <br/>
                                             <?php
                                             $cod_professor = $_GET['professor'];
 
                                             $select_nome = $crud->select('nome_professor', 'professor', 'WHERE id_professor = ?')->run([$cod_professor]);
-
-                                            //$sql_busca_nome = mysqli_query($conexao, $busca_nome) or die(mysqli_error($conexao));
                                             $valores = $select_nome->fetch(PDO::FETCH_ASSOC);
                                             $nome_professor = $valores['nome_professor'];
                                             ?>
@@ -966,15 +980,13 @@
                                                             <center>
                                                                 <select name="cod_materia">
                                                                     <?php
-                                                                    $sql_select_materias_diferentes = "SELECT * FROM disciplina WHERE nome_disciplina != '' ORDER BY nome_disciplina";
-
-                                                                    $select_materias_diferentes = mysqli_query($conexao, $sql_select_materias_diferentes) or die(mysqli_error($conexao));
-
-                                                                    while ($select_materias_diferentes_valores = mysqli_fetch_assoc($select_materias_diferentes)) {
+                                                                    $select_disc_dif = $crud->select('id_disciplina, nome_disciplina', 'disciplina', 'WHERE nome_disciplina IS NOT NULL ORDER BY nome_disciplina')->run();
+                                                                    
+                                                                    while ($val_dif = $select_disc_dif->fetch(PDO::FETCH_ASSOC)) {
                                                                         ?>
 
-                                                                        <option value="<?php echo $select_materias_diferentes_valores['id_disciplina']; ?>">
-                                                                            <?php echo $nome_disciplina = $select_materias_diferentes_valores['nome_disciplina']; ?>
+                                                                        <option value="<?php echo $val_dif['id_disciplina']; ?>">
+                                                                            <?php echo $val_dif['nome_disciplina']; ?>
                                                                         </option>
                                                                     <?php } ?>										
                                                                 </select>
@@ -1002,25 +1014,26 @@
                                             <?php
                                             if (isset($_POST['cadastra_professor_materia'])) {
                                                 $cod_disciplina = $_POST['cod_materia'];
-                                                $verifica = "SELECT * FROM disciplina_ministrada dm INNER JOIN disciplina d ON dm.id_disciplina = d.id_disciplina WHERE dm.id_professor = '$cod_professor' AND dm.id_disciplina = '$cod_disciplina'";
+                                                $verifica = $crud->select('COUNT(*) quantidade_registros, d.nome_disciplina', 'disciplina_ministrada dm', 'INNER JOIN disciplina d ON dm.id_disciplina = d.id_disciplina WHERE dm.id_professor = ? AND dm.id_disciplina = ?' )->run([$cod_professor, $cod_disciplina]);
+                                                //$verifica = "SELECT * FROM disciplina_ministrada dm INNER JOIN disciplina d ON dm.id_disciplina = d.id_disciplina WHERE dm.id_professor = '$cod_professor' AND dm.id_disciplina = '$cod_disciplina'";
+                                                //$retorno_verifica = mysqli_query($conexao, $verifica)or die(mysqli_error($conexao));
 
-                                                $retorno_verifica = mysqli_query($conexao, $verifica)or die(mysqli_error($conexao));
+                                                if ($verifica->rowCount() <= 0) {
+                                                    
+                                                    $insert_dm = $crud->insert('disciplina_ministrada', 'id_professor, id_disciplina', '(?, ?)')->run([$cod_professor, $cod_disciplina]);
 
+                                                    //$sql_insert_dm = "INSERT INTO disciplina_ministrada (id_professor, id_disciplina) VALUES ('$cod_professor', '$cod_disciplina')";
 
-                                                if (mysqli_num_rows($retorno_verifica) == '') {
+                                                    //$insert_disciplina_ministrada = mysqli_query($conexao, $sql_insert_dm)or die(mysqli_error($conexao));
 
-                                                    $sql_insert_dm = "INSERT INTO disciplina_ministrada (id_professor, id_disciplina) VALUES ('$cod_professor', '$cod_disciplina')";
-
-                                                    $insert_disciplina_ministrada = mysqli_query($conexao, $sql_insert_dm)or die(mysqli_error($conexao));
-
-                                                    if ($insert_disciplina_ministrada == '') {
+                                                    if ($insert_dm->rowCount() <= 0) {
                                                         echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
                                                     } else {
                                                         echo "<script language='javascript'> window.alert('Cadastro Realizado com sucesso!!');</script>";
                                                         echo "<script language='javascript'>window.location='professores.php?pg=professor&op=visualizar&professor=$cod_professor';</script>";
                                                     }
                                                 } else {
-                                                    $values = mysqli_fetch_assoc($retorno_verifica);
+                                                    $values = $verifica->fetch(PDO::FETCH_ASSOC);
                                                     $nome_disciplina = $values['nome_disciplina'];
                                                     echo "<script language='javascript'> window.alert('Este Professor(a) já Ministra a Disciplina $nome_disciplina!!');</script>";
                                                 }
@@ -1035,7 +1048,7 @@
                                         </div>
                                         <?php
                                         die;
-                                    } */ ?>	
+                                    }  ?>	
 
 
                                     </body>

@@ -137,7 +137,8 @@
                     <h1><center>Chamada na Turma <strong><?php echo $val_turma['nome_turma']; ?></strong>, com o Professor(a) <strong><?php echo $val_professor['nome_professor']; ?></strong></center></h1><br/>
 
                     <?php
-                    $select_nome_id_aluno = $crud->select('m.id_aluno, i.nome_aluno', 'matricula m', 'INNER JOIN aluno a ON a.id_aluno = m.id_aluno INNER JOIN inscricao i ON i.id_inscricao = a.id_inscricao INNER JOIN turma t ON t.id_turma = m.id_turma WHERE t.id_turma = ? ORDER BY i.nome_aluno ASC')->run([$cod_turma]);
+                    $select_nome_id_aluno = $crud->select('a.id_aluno, i.nome_aluno', 'aluno a', 'INNER JOIN inscricao i ON i.id_inscricao = a.id_inscricao INNER JOIN turma t ON t.id_turma = a.id_turma WHERE t.id_turma = ? ORDER BY i.nome_aluno ASC')->run([$cod_turma]);
+                    //$select_nome_id_aluno = $crud->select('m.id_aluno, i.nome_aluno', 'matricula m', 'INNER JOIN aluno a ON a.id_aluno = m.id_aluno INNER JOIN inscricao i ON i.id_inscricao = a.id_inscricao INNER JOIN turma t ON t.id_turma = m.id_turma WHERE t.id_turma = ? ORDER BY i.nome_aluno ASC')->run([$cod_turma]);
                     $numRows = $select_nome_id_aluno->rowCount();
 
                     if ($numRows <= 0) {
