@@ -406,7 +406,7 @@
 
                 $cod_aluno = $_GET['aluno'];
 
-                $select_tudo_aluno = $crud->select('a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_contato telefone_contato, i.celular_contato celular_contato, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.data_nascimento_responsavel, r.sexo_responsavel sexo_responsavel, r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, a.rua_aluno rua_aluno, a.numero_aluno numero_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, a.data_matricula dt_matricula, t.nome_turma nome_turma, a.id_turma id_turma', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao'
+                $select_tudo_aluno = $crud->select('a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_contato telefone_contato, i.celular_contato celular_contato, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.data_nascimento_responsavel, r.sexo_responsavel sexo_responsavel, r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, a.rua_aluno rua_aluno, a.numero_aluno numero_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, a.data_matricula dt_matricula, t.nome_turma nome_turma, a.id_turma id_turma', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno'
                                 . ' INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel'
                                 . ' INNER JOIN turma t ON a.id_turma = t.id_turma'
                                 . ' WHERE a.id_aluno = :id_aluno')
@@ -469,7 +469,7 @@
                 $val_aulas_dadas = $select_qtde_aulas->fetch(PDO::FETCH_ASSOC);
                 $qtde_aulas = $val_aulas_dadas['aulas_dadas'];
 
-                $chamada = $crud->select('c.data_chamada data_chamada, t.nome_turma nome_turma, p.nome_professor nome_professor, i.nome_aluno nome_aluno, c.presenca presenca', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel INNER JOIN turma t ON a.id_turma = t.id_turma INNER JOIN chamada c ON c.id_aluno = a.id_aluno INNER JOIN professor p ON p.id_professor = c.id_professor WHERE (c.data_chamada BETWEEN a.data_matricula AND CURRENT_DATE) AND a.id_aluno = :id_aluno AND a.id_turma = :id_turma ORDER BY c.data_chamada')->run([':id_aluno' => $cod_aluno, ':id_turma' => $cod_turma]);
+                $chamada = $crud->select('c.data_chamada data_chamada, t.nome_turma nome_turma, p.nome_professor nome_professor, i.nome_aluno nome_aluno, c.presenca presenca', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel INNER JOIN turma t ON a.id_turma = t.id_turma INNER JOIN chamada c ON c.id_aluno = a.id_aluno INNER JOIN professor p ON p.id_professor = c.id_professor WHERE (c.data_chamada BETWEEN a.data_matricula AND CURRENT_DATE) AND a.id_aluno = :id_aluno AND a.id_turma = :id_turma ORDER BY c.data_chamada')->run([':id_aluno' => $cod_aluno, ':id_turma' => $cod_turma]);
                 ?>
 
                 <table border="0">
@@ -744,7 +744,7 @@
 
                 $cod_aluno = $_GET['aluno'];
                 
-                $select_tudo_aluno = $crud->select('a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_contato telefone_contato, i.celular_contato celular_contato, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.data_nascimento_responsavel, r.sexo_responsavel sexo_responsavel, r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, a.rua_aluno rua_aluno, a.numero_aluno numero_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, a.data_matricula dt_matricula, t.nome_turma nome_turma, a.id_turma id_turma', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao'
+                $select_tudo_aluno = $crud->select('a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_contato telefone_contato, i.celular_contato celular_contato, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.data_nascimento_responsavel, r.sexo_responsavel sexo_responsavel, r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, a.rua_aluno rua_aluno, a.numero_aluno numero_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, a.data_matricula dt_matricula, t.nome_turma nome_turma, a.id_turma id_turma', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno'
                                 . ' INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel'
                                 . ' INNER JOIN turma t ON a.id_turma = t.id_turma'
                                 . ' WHERE a.id_aluno = :id_aluno')
@@ -1017,7 +1017,7 @@
 
                     <?php if (isset($_POST['button'])) {
 
-                        $_aluno = $_POST['code'];
+                        //$_aluno = $_POST['code'];
                         $id_inscricao = $_POST['cod_inscricao'];
                         $data_nascimento_aluno = $_POST['data_nascimento_aluno'];
                         $rg_aluno = $_POST['rg_aluno'];
@@ -1031,7 +1031,7 @@
                         $escolaridade = $_POST['escolaridade'];
                         $escola = $_POST['escola'];
 
-                        $insert_aluno = $crud->insert('aluno', 'id_inscricao, data_nascimento_aluno, rg_aluno, cpf, rua_aluno, numero_aluno, bairro_aluno, cidade_aluno, complemento_aluno, cep_aluno, escolaridade, escola', '(:id_inscricao, :data_nascimento_aluno, :rg_aluno, :cpf_aluno, :rua_aluno, :numero_aluno, :bairro_aluno, :cidade_aluno, :complemento_aluno, :cep_aluno, :escolaridade, :escola)')->run([':id_inscricao' => $id_inscricao, ':data_nascimento_aluno' => $data_nascimento_aluno, ':rg_aluno' => $rg_aluno, ':cpf_aluno' => $cpf_aluno, ':rua_aluno' => $rua, ':numero_aluno' => $numero, ':bairro_aluno' => $bairro_aluno, ':cidade_aluno' => $cidade_aluno, ':complemento_aluno' => $complemento_aluno, ':cep_aluno' => $cep_aluno, ':escolaridade' => $escolaridade, ':escola' => $escola]);
+                        $insert_aluno = $crud->insert('aluno', 'id_aluno, data_nascimento_aluno, rg_aluno, cpf, rua_aluno, numero_aluno, bairro_aluno, cidade_aluno, complemento_aluno, cep_aluno, escolaridade, escola', '(:id_inscricao, :data_nascimento_aluno, :rg_aluno, :cpf_aluno, :rua_aluno, :numero_aluno, :bairro_aluno, :cidade_aluno, :complemento_aluno, :cep_aluno, :escolaridade, :escola)')->run([':id_inscricao' => $id_inscricao, ':data_nascimento_aluno' => $data_nascimento_aluno, ':rg_aluno' => $rg_aluno, ':cpf_aluno' => $cpf_aluno, ':rua_aluno' => $rua, ':numero_aluno' => $numero, ':bairro_aluno' => $bairro_aluno, ':cidade_aluno' => $cidade_aluno, ':complemento_aluno' => $complemento_aluno, ':cep_aluno' => $cep_aluno, ':escolaridade' => $escolaridade, ':escola' => $escola]);
 
                         if ($insert_aluno->rowCount() <= 0) {
                             echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
@@ -1041,36 +1041,7 @@
                     } ?>
 
                     <form name="form1" method="post" action="">
-                        <table width="900" border="0">
-                            <tr>
-                                <td></td>
-                                <td colspan="2"><strong>Foi criado um código único para este aluno</strong></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-
-                                <?php 
-                                $select_last_id = $crud->select('id_aluno', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao ORDER BY a.id_aluno DESC LIMIT 1')->run();
-                                if ($select_last_id->rowCount() <= 0) {
-
-                                    $novo_id = 1; ?>
-                                    <td><input type="text" name="code" disabled="disabled" value="<?php echo $novo_id; ?>" /></td>
-                                    <input type="hidden" name="code" value="<?php echo $novo_id; ?>"/>
-
-                                <?php } else {
-
-                                    while ($val_last_id = $select_last_id->fetch(PDO::FETCH_ASSOC)) {
-
-                                        $novo_id = $val_last_id['id_aluno'] + 1; ?>
-
-                                        <td><input type="text" name="code"  disabled="disabled" value="<?php echo $novo_id; ?>" /></td>
-                                        <input type="hidden" name="code" value="<?php echo $novo_id; ?>" />
-                                    <?php }
-                                } ?>
-
-                                <td></td>							
-                            </tr>    
+                        <table width="900" border="0">                                                           
                             <tr>
                                 <td>Código de inscrição:</td>
                                 <td>Nome completo:</td>
@@ -1150,7 +1121,7 @@
                         } else {
                             $last_id_respondavel = $crud->con()->lastInsertId();
 
-                            $crud->update('aluno', 'id_responsavel = :id_responsavel', 'WHERE id_inscricao = :id_inscricao')->run([':id_responsavel' => $last_id_respondavel, ':id_inscricao' => $id_inscricao]);
+                            $crud->update('aluno', 'id_responsavel = :id_responsavel', 'WHERE id_aluno = :id_inscricao')->run([':id_responsavel' => $last_id_respondavel, ':id_inscricao' => $id_inscricao]);
 
                             echo "  <script language='javascript'> 
                                         window.alert('Cadastro Realizado com sucesso!!'); 
@@ -1234,7 +1205,7 @@
                 <h1>Alunos cadastradados</h1>
                 <br/>
                 <?php 
-                $select_inscricao_aluno = $crud->select('*', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao WHERE i.nome_aluno IS NOT NULL ORDER BY i.nome_aluno')->run();
+                $select_inscricao_aluno = $crud->select('*', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno WHERE i.nome_aluno IS NOT NULL ORDER BY i.nome_aluno')->run();
                 
                 if ($select_inscricao_aluno->rowCount() <= 0) {
                     echo "<h2>Não exisite nenhum aluno cadastrado no momento</h2>";

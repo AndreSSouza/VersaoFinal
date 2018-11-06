@@ -102,7 +102,7 @@
                                 <td>Modificar</td>							
                             </tr>
                             <?php
-                            $select_chamada = $crud->select('c.id_aluno aluno, c.id_turma turma, c.id_professor prof, c.data_chamada data_chamada, c.presenca status, i.nome_aluno nome', 'chamada c', 'INNER JOIN professor p ON p.id_professor = c.id_professor INNER JOIN turma t ON t.id_turma = c.id_turma INNER JOIN aluno a ON a.id_aluno = c.id_aluno INNER JOIN inscricao i ON i.id_inscricao = a.id_inscricao WHERE a.id_aluno IS NOT NULL AND c.id_turma = :id_turma AND c.id_professor = :id_professor AND c.data_chamada = :dt')->run([':id_turma' => $cod_turma, ':id_professor' => $cod_professor, ':dt' => $data_hoje_USA]);
+                            $select_chamada = $crud->select('c.id_aluno aluno, c.id_turma turma, c.id_professor prof, c.data_chamada data_chamada, c.presenca status, i.nome_aluno nome', 'chamada c', 'INNER JOIN professor p ON p.id_professor = c.id_professor INNER JOIN turma t ON t.id_turma = c.id_turma INNER JOIN aluno a ON a.id_aluno = c.id_aluno INNER JOIN inscricao i ON i.id_inscricao = a.id_aluno WHERE a.id_aluno IS NOT NULL AND c.id_turma = :id_turma AND c.id_professor = :id_professor AND c.data_chamada = :dt')->run([':id_turma' => $cod_turma, ':id_professor' => $cod_professor, ':dt' => $data_hoje_USA]);
 
                             while ($dados_chamada = $select_chamada->fetch(PDO::FETCH_ASSOC)) {
                                 $nome = $dados_chamada['nome'];
@@ -137,8 +137,8 @@
                     <h1><center>Chamada na Turma <strong><?php echo $val_turma['nome_turma']; ?></strong>, com o Professor(a) <strong><?php echo $val_professor['nome_professor']; ?></strong></center></h1><br/>
 
                     <?php
-                    $select_nome_id_aluno = $crud->select('a.id_aluno, i.nome_aluno', 'aluno a', 'INNER JOIN inscricao i ON i.id_inscricao = a.id_inscricao INNER JOIN turma t ON t.id_turma = a.id_turma WHERE t.id_turma = ? ORDER BY i.nome_aluno ASC')->run([$cod_turma]);
-                    //$select_nome_id_aluno = $crud->select('m.id_aluno, i.nome_aluno', 'matricula m', 'INNER JOIN aluno a ON a.id_aluno = m.id_aluno INNER JOIN inscricao i ON i.id_inscricao = a.id_inscricao INNER JOIN turma t ON t.id_turma = m.id_turma WHERE t.id_turma = ? ORDER BY i.nome_aluno ASC')->run([$cod_turma]);
+                    $select_nome_id_aluno = $crud->select('a.id_aluno, i.nome_aluno', 'aluno a', 'INNER JOIN inscricao i ON i.id_inscricao = a.id_aluno INNER JOIN turma t ON t.id_turma = a.id_turma WHERE t.id_turma = ? ORDER BY i.nome_aluno ASC')->run([$cod_turma]);
+                    //$select_nome_id_aluno = $crud->select('m.id_aluno, i.nome_aluno', 'matricula m', 'INNER JOIN aluno a ON a.id_aluno = m.id_aluno INNER JOIN inscricao i ON i.id_inscricao = a.id_aluno INNER JOIN turma t ON t.id_turma = m.id_turma WHERE t.id_turma = ? ORDER BY i.nome_aluno ASC')->run([$cod_turma]);
                     $numRows = $select_nome_id_aluno->rowCount();
 
                     if ($numRows <= 0) {

@@ -54,7 +54,7 @@
                             <td><strong>Quantidade de faltas</strong></td>
                         </tr>
                         <?php
-                        $select = $crud->select('i.nome_aluno AS nome, a.id_aluno AS id_aluno', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao INNER JOIN turma t ON t.id_turma = a.id_turma WHERE t.id_turma = ?')->run([$cod_turma]);
+                        $select = $crud->select('i.nome_aluno AS nome, a.id_aluno AS id_aluno', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno INNER JOIN turma t ON t.id_turma = a.id_turma WHERE t.id_turma = ?')->run([$cod_turma]);
                         while ($values_select = $select->fetch(PDO::FETCH_ASSOC)) {
                             ?>
                             <tr>
