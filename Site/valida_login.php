@@ -16,16 +16,31 @@ if (empty($login)) {
 
     $senha = md5($senha);
 
-    $select = $crud->select('COUNT(*) quantidade, tipo_usuario tipo', 'login', 'WHERE nome_usuario = :login AND senha = :senha')
+    $select = $crud->select('COUNT(*) quantidade, tipo_usuario tipo, status_login', 'login', 'WHERE nome_usuario = :login AND senha = :senha')
             ->run([':login' => $login, ':senha' => $senha]);
 
     $valores = $select->fetch(PDO::FETCH_ASSOC);
-    $erro = ($valores['quantidade'] >= 1) ? NULL : 'Usuário não encontrado';
+
+    if ($valores['quantidade'] == 1) {
+        if ($valores['status_login'] == 0) {
+            $erro = 'Login Inativo';
+        }
+    } else {
+        $erro = 'Usuário ou Senha Incorretos';
+    }
 }
-if (!is_null($erro)) {
+if ($erro) {
     header("location:login.php?erro=$erro");
-}
- header("location:admin/index.php");
+} else {
+    //session_start();
+
+
+
+
+
+
+
+    header("location:admin/index.php");
 
 //if ($valores['tipo'] == 'ADMINISTRADOR') {
 //    echo 'Você está logado com uma conta administrador';
@@ -69,5 +84,5 @@ if (!is_null($erro)) {
 //
 //
 //var_dump($result);
-
-            
+}
+     

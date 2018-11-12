@@ -66,7 +66,7 @@ require '../class/config.class.php';
                                 <a href="novidades.php?pg=plano">Plano de Aula</a>
                             </li>
                             <li>
-                                <a href="#">Data Show</a>
+                                <a href="novidades.php?pg=data">Data Show</a>
                             </li>						
                         </ul>
                     </li>
