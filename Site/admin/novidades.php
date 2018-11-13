@@ -4,7 +4,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Novidades</title>
-        <!--<link rel="stylesheet" type="text/css" href="css/cursos_e_disciplinas.css"/>-->
         <link rel="stylesheet" type="text/css" href="css/estilo.css" />
     </head>
     <body>
@@ -15,7 +14,6 @@
                     if (@$_GET['plano'] != 'null') {
                         $id_plano = @$_GET['plano'];
                         $consulta_plano = $crud->select('pa.id_plano id, pa.titulo titulo, d.nome_disciplina nome_disc, pa.descricao descricao', 'plano_aula pa', 'INNER JOIN disciplina d ON pa.id_disciplina = d.id_disciplina WHERE pa.id_plano = ?')->run([$id_plano]);
-                        //$consulta_plano = "SELECT pa.id_plano 'id', pa.titulo 'titulo', d.nome_disciplina 'nome_disc', pa.descricao 'descricao' FROM plano_aula pa INNER JOIN disciplina d ON pa.id_disciplina = d.id_disciplina WHERE pa.id_plano = '$id_plano'";
 
                         $dados_plano = $consulta_plano->fetch(PDO::FETCH_ASSOC);
 
@@ -49,15 +47,14 @@
                     <form method="post">
                         <table width="900px">				
                             <tr>
-                                <td><i>Matéria : </i><b>
+                                <td>
+                                    <i>Matéria : </i>
+                                    <b>
                                         <?php if ($id_plano == 'null') { ?>
                                             <select name="materia" style="width: auto">
 
                                                 <?php
-                                                $select_mat_dif = $crud->select('id_disciplina, nome_disciplina', 'disciplina', 'WHERE nome_disciplina IS NOT NULL ORDER BY nome_disciplina')->run([]);
-                                                //$sql_select_materias_diferentes = "SELECT id_disciplina, nome_disciplina FROM disciplina WHERE nome_disciplina != '' ORDER BY nome_disciplina";
-                                                //"SELECT d.id_disciplina 'id_disc' , d.nome_disciplina 'nome_disc' FROM disciplina d INNER JOIN disciplina_ministrada dm ON d.id_disciplina = dm.id_disciplina WHERE d.nome_disciplina <> '' AND dm.id_professor = '$id_professor'"
-                                                //$select_materias_diferentes = mysqli_query($conexao, $sql_select_materias_diferentes) or die(mysqli_error($conexao));
+                                                $select_mat_dif = $crud->select('id_disciplina, nome_disciplina', 'disciplina', 'WHERE nome_disciplina IS NOT NULL ORDER BY nome_disciplina')->run();
 
                                                 while ($select_materias_diferentes_valores = $select_mat_dif->fetch(PDO::FETCH_ASSOC)) {
                                                     $id_disciplina = $select_materias_diferentes_valores['id_disciplina'];
@@ -73,7 +70,8 @@
                                             echo $nome_disc;
                                         }
                                         ?>
-                                    </b></td>
+                                    </b>
+                                </td>
                             </tr>
                             <tr>
                                 <td><center><i><b>Plano de Aula</b></i></center></td>
@@ -83,23 +81,25 @@
                             </tr>
                             <tr>							
                                 <td><center><b><input name="titulo" type="text" style="width: 900px" value="<?php echo $titulo; ?>" <?php echo $disabled; ?>/></b></center></td>
-                            </tr><br>
+                            </tr><br/>
+                            <tr>
+                                <td><center><i><b>Descrição</b></i></center></td>
+                            </tr>
+                            <tr>
+                                <td><center><b><textarea name="descricao" rows="20" cols="123" <?php echo $disabled; ?> ><?php echo $descricao; ?></textarea></b></center></td>
+                            </tr>
+                            <?php if ((@$_GET['func'] == 'alt') || ($_GET['plano'] == 'null')) { ?>
                                 <tr>
-                                    <td><center><i><b>Descrição</b></i></center></td>
-                                </tr>
-                                <tr>
-                                    <td><center><b><textarea name="descricao" rows="20" cols="123" <?php echo $disabled; ?> ><?php echo $descricao; ?></textarea></b></center></td>
-                                        						</tr>
-                                <?php if ((@$_GET['func'] == 'alt') || ($_GET['plano'] == 'null')) { ?>
-                                                            							<tr>
-                                                            								<td><center>
-                                                            									<input class="input" type="submit" name="salvar" value="Salvar" />
-                                                            									<a class="input" href="novidades.php?pg=plano<?php echo $caminho = $_GET['plano'] == 'null' ? '' : "&act=more&plano=$id_plano"; ?>">Cancelar</a>
-                                                            								</center></td>
-                                                            							</tr>							
-                                <?php } ?>						
-                                        					</table>										
-                                        				</form>	
+                                    <td>
+                                        <center>
+                                            <input class="input" type="submit" name="salvar" value="Salvar" />
+                                            <a class="input" href="novidades.php?pg=plano<?php echo $caminho = $_GET['plano'] == 'null' ? '' : "&act=more&plano=$id_plano"; ?>">Cancelar</a>
+                                        </center>
+                                    </td>
+                                </tr>							
+                            <?php } ?>						
+                        </table>										
+                    </form>	
                     <?php
                     if (isset($_POST['salvar'])) {
 
@@ -134,190 +134,198 @@
                     die;
                 }
                 ?>			
-                    			<a class="a2" href="novidades.php?pg=plano&act=more&plano=null">Adicionar novo plano de aula</a>
-                    			<br><br>
-                    			<table width="900px">
-                    				<tr>
-                    					<td colspan="2"><center><i><b>Meus Planos de Aula</b></i></center></td>
-                    				</tr>
-                    				<tr>
-                    					<td><center><i><b>Matéria</b></i></center></td>
-                    					<td><center><i><b>Título</b></i></center></td>
-                    				</tr>
-                            <?php
-                            $cod_prof = 1; //Alterar após separar cada parte assim aqui ira receber o código que vem por url post ou get ou sla
-                            $busca_plano = $crud->select('pa.id_plano id, pa.titulo titulo, d.nome_disciplina nome_disc', 'plano_aula pa', 'INNER JOIN disciplina d ON pa.id_disciplina = d.id_disciplina WHERE pa.id_professor = ?')->run([$cod_prof]);
-                            //$busca_plano = "SELECT pa.id_plano id, pa.titulo titulo, d.nome_disciplina nome_disc FROM plano_aula pa INNER JOIN disciplina d ON pa.id_disciplina = d.id_disciplina WHERE pa.id_professor = '$cod_prof'";
-                            //$sql_busca_plano = mysqli_query($conexao, $busca_plano) or die(mysqli_error($conexao));
-                            while ($dados_plano = $busca_plano->fetch(PDO::FETCH_ASSOC)) {
-                                $nome_disc = $dados_plano['nome_disc'];
-                                $titulo = $dados_plano['titulo'];
-                                $id_plano = $dados_plano['id'];
-                                ?>
+                <a class="a2" href="novidades.php?pg=plano&act=more&plano=null">Adicionar novo plano de aula</a>
+                <br/><br/>
+                <table width="900px">
+                    <tr>
+                        <td colspan="2"><center><i><b>Meus Planos de Aula</b></i></center></td>
+                    </tr>
+                    <tr>
+                        <td><center><i><b>Matéria</b></i></center></td>
+                        <td><center><i><b>Título</b></i></center></td>
+                    </tr>
+                    <?php
+                    $cod_prof = 1; //Alterar após separar cada parte assim aqui ira receber o código que vem por url post ou get ou sla
+                    $busca_plano = $crud->select('pa.id_plano id, pa.titulo titulo, d.nome_disciplina nome_disc', 'plano_aula pa', 'INNER JOIN disciplina d ON pa.id_disciplina = d.id_disciplina WHERE pa.id_professor = ?')->run([$cod_prof]);
+                     
+                    while ($dados_plano = $busca_plano->fetch(PDO::FETCH_ASSOC)) {
+                        $nome_disc = $dados_plano['nome_disc'];
+                        $titulo = $dados_plano['titulo'];
+                        $id_plano = $dados_plano['id'];
+                        ?>                                        					
+                        <tr>
+                            <td><center><?php echo $nome_disc; ?></center></td>	
+                            <td><center><a href="novidades.php?pg=plano&act=more&plano=<?php echo $id_plano; ?>"><?php echo $titulo; ?></a></center></td>
+                        </tr>
                                         					
-                                        					<tr>
-                                        						<td><center><?php echo $nome_disc; ?></center></td>	
-                                        						<td><center><a href="novidades.php?pg=plano&act=more&plano=<?php echo $id_plano; ?>"><?php echo $titulo; ?></a></center></td>
-                                        					</tr>
-                                        					
-                            <?php } ?>
-                    			</table>
-                    			<br>
-                        <?php } ?>
+                    <?php } ?>
+                </table>
+                <br/>
+            <?php } ?>
 		
-		
-		
-                        <?php
-                        if (@$_GET['pg'] == 'data') {?>
+            <?php
+            if (@$_GET['pg'] == 'data') {?>
                                             
-                            <?php if (@$_GET['area'] == 'video') { ?>
-                                            
-                                <?php if (@$_GET['cadastra'] == 'sim') { ?>  
-                                            
-                                    <h1>Cadastrar Sala</h1>
-                                    
-                                    <?php if (isset($_POST['cadastra_turma'])) {
+                <?php if (@$_GET['area'] == 'video') { ?>
 
-                                        $nome_sala = $_POST['nome_sala']; 
-                                        $insert_sala = $crud->insert('sala_video', 'identificador', '(?)')->run([$nome_sala]);
+                    <?php if (@$_GET['cadastra'] == 'sim') { ?>  
 
-                                        if ($insert_sala->rowCount() <= 0) {
-                                            echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
-                                        } else {
-                                            echo "<script language='javascript'>                                                                                                                                                                                                window.alert('Cadastro Realizado com sucesso!');                                                                                                                                                                            window.location='novidades.php?pg=data&area=video';
-                                                  </script>";
-                                        }
-                                    } ?>
-                                    
-                                    <form name="form1" method="post" action="">
-                                        <table border="0">
-                                            <tr>
-                                                <td width="134"><center>Nome da Sala</center></td>
-                                            </tr>
-                                            <tr>
-                                                <td><input type="text" name="nome_sala" maxlength="3"/></td>
-                                            </tr>
-                                            <tr>
-                                                <td><center><input class="input" type="submit" name="cadastra_turma" id="button" value="Cadastrar"/></center></td>
-                                            </tr>
-                                        </table>
-                                    </form>
-                                    <br/>
-                                <?php die; } ?>
-                            <?php }?>
-                                    
-                            <?php if (@$_GET['area'] == 'datashow') { ?>
-                                <?php if (@$_GET['cadastra'] == 'sim') { ?>
-                                    <?php if (isset($_POST['cadastra_reserva'])) {
+                        <h1>Cadastrar Sala</h1>
 
-                                        $id_prof_post = $_POST['professor']; 
-                                        $id_sala_post = $_POST['sala']; 
-                                        $data_reserva_post = $_POST['data_reserva']; 
-                                        $obs_post = $_POST['obs'];
-                                        
-                                        $insert_reserva = $crud->insert('reserva', 'id_sala, id_professor, data_reserva, obs', '(?, ?, ?, ?)')
-                                                               ->run([$id_sala_post, $id_prof_post, $data_reserva_post, $obs_post]);
+                        <?php if (isset($_POST['cadastra_turma'])) {
 
-                                        if ($insert_reserva->rowCount() <= 0) {
-                                            echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
-                                        } else {
-                                            echo "<script language='javascript'>                                                                                                                                    window.alert('Cadastro Realizado com sucesso!');
-                                                     window.location='novidades.php?pg=data';
-                                                  </script>";
-                                        }
-                                    } ?>
-                                    <form method="post" border="0px" width="900px">
-                                        <table>
-                                            <tr>
-                                                <td colspan="2"><center>Fazer Reserva do Data Show</center></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Professor</td>
-                                                <td>Sala</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <select name="professor">
-                                                        <option>Selecione o Professor</option>
-                                                        <?php $sel_prof = $crud->select('id_professor, nome_professor', 'professor', 'WHERE id_professor IS NOT NULL ORDER BY nome_professor')->run();
-                                                        while ($val_prof = $sel_prof->fetch(PDO::FETCH_ASSOC)){
-                                                            $id_professor = $val_prof['id_professor'];
-                                                            $nome_professor = $val_prof['nome_professor'];
-                                                            echo "<option value='$id_professor'>$nome_professor</option>"; 
-                                                        }?>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select name="sala">
-                                                        <option>Selecione a Turma</option>
-                                                        <?php $sel_sala = $crud->select('id_sala, identificador', 'sala_video', 'WHERE id_sala IS NOT NULL ORDER BY identificador')->run();
-                                                        while ($val_sala = $sel_sala->fetch(PDO::FETCH_ASSOC)){
-                                                            $id_sala = $val_sala['id_sala'];
-                                                            $nome_sala = $val_sala['identificador'];
-                                                            echo "<option value='$id_sala'>$nome_sala</option>"; 
-                                                        }?>
-                                                    </select>
-                                                </td>
-                                            </tr>                                            
-                                            <tr>
-                                                <td>Data</td>
-                                                <td>Observação</td> 
-                                            </tr>
-                                            <tr>
-                                                <td><input name="data_reserva" type="date"/></td>
-                                                <td>
-                                                    <textarea name="obs" rows="3" cols="40" maxlength="120"></textarea>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2"><center><input class="input" id="button" name="cadastra_reserva" value="Cadastrar" type="submit"/></center></td>
-                                            </tr>
-                                        </table>                                    
-                                    </form>
-                                <?php die; } ?>
-                            <?php } ?>
-                                    
-                            <center>
-                                <a class="a2" href = "novidades.php?pg=data&area=datashow&cadastra=sim">Reservas</a>
-                                <a class="a2" href = "novidades.php?pg=data&area=video&cadastra=sim">Sala de Vídeo</a>
-                            </center>
-                            <br/><br/>
-                            <center><i><b><h1>Proximas Reservas</h1></b></i></center>
-                            <table border="0px" width = "900px">                                
-                                <thead>
-                                    <th><center><i><b>Sala</b></i></center></th>
-                                    <th><center><i><b>Professor</b></i></center></th>
-                                    <th><center><i><b>Data da Reserva</b></i></center></th>
-                                    <th><center><i><b>Obs</b></i></center></th>
-                                </thead>
-                                <?php
-                                $proximos_4_sabados = date("d/m/Y",mktime(date("H"),date("i"),date("s"),date("m"),date("d")+28,date("Y")));
-                                
-                                $mostra_todos = $crud->select('r.id_reserva, r.id_sala, r.id_professor, r.data_reserva, r.obs', 'reserva r', 'INNER JOIN professor p ON p.id_professor = r.id_professor INNER JOIN sala_video sl ON sl.id_sala = r.id_sala WHERE id_sala IS NOT NULL AND id_professor IS NOT NULL AND (data_reserva BETWEEN CURRENT_DATE AND ?) ORDER BY data_reserva')->run([$proximos_4_sabados]);
-                                
-                                
-                                
-                                
-                                /*
-                            //$cod_prof = 1; //Alterar após separar cada parte assim aqui ira receber o código que vem por url post ou get ou sla
-                            $busca_plano = $crud->select('s.identificador, rs.data_reserva, rs.obs, p.nome_professor, rs.id_reserva', 'reserva rs', 'INNER JOIN sala_video s ON s.id_sala = rs.id_sala INNER JOIN professor p ON p.id_professor = rs.id_professor WHERE p.id_professor IS NOT NULL')->run([]);
-                            //$busca_plano = "SELECT pa.id_plano id, pa.titulo titulo, d.nome_disciplina nome_disc FROM plano_aula pa INNER JOIN disciplina d ON pa.id_disciplina = d.id_disciplina WHERE pa.id_professor = '$cod_prof'";
-                            //$sql_busca_plano = mysqli_query($conexao, $busca_plano) or die(mysqli_error($conexao));
-                            while ($dados_plano = $busca_plano->fetch(PDO::FETCH_ASSOC)) 
-                                 * {
-                                 * $class = @$i % 2 == 0 ? ' class="dif"' : '';
-                                $nome_disc = $dados_plano['nome_disc'];
-                                $titulo = $dados_plano['titulo'];
-                                $id_plano = $dados_plano['id'];
-                                ?><!--
+                            $nome_sala = $_POST['nome_sala']; 
+                            $insert_sala = $crud->insert('sala_video', 'identificador', '(?)')->run([$nome_sala]);
+
+                            if ($insert_sala->rowCount() <= 0) {
+                                echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
+                            } else {
+                                echo "<script language='javascript'>                                                                                                                                                                                                window.alert('Cadastro Realizado com sucesso!');                                                                                                                                                                            window.location='novidades.php?pg=data&area=video';
+                                      </script>";
+                            }
+                        } ?>
+
+                        <form name="form1" method="post" action="">
+                            <table border="0">
                                 <tr>
-                                    <td><center><?php echo $nome_disc; ?></center></td>	
-                                    <td><center><a href="novidades.php?pg=plano&act=more&plano=<?php echo $id_plano; ?>"><?php echo $titulo; ?></a></center></td>
-                                </tr>-->					
-                            <?php } */ ?>
+                                    <td width="134"><center>Nome da Sala</center></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" name="nome_sala" maxlength="3"/></td>
+                                </tr>
+                                <tr>
+                                    <td><center><input class="input" type="submit" name="cadastra_turma" id="button" value="Cadastrar"/></center></td>
+                                </tr>
                             </table>
-                            <br/> 
-                       <?php die; } ?>		
+                        </form>
+                        <br/>
+                    <?php die; } ?>
+                <?php }?>
+
+                <?php if (@$_GET['area'] == 'datashow') { ?>
+                    <?php if (@$_GET['cadastra'] == 'sim') { ?>
+                        <?php if (isset($_POST['cadastra_reserva'])) {
+
+                            $id_prof_post = $_POST['professor']; 
+                            $id_sala_post = $_POST['sala']; 
+                            $data_reserva_post = $_POST['data_reserva']; 
+                            $obs_post = $_POST['obs'];
+
+                            $insert_reserva = $crud->insert('reserva', 'id_sala, id_professor, data_reserva, obs', '(?, ?, ?, ?)')
+                                                   ->run([$id_sala_post, $id_prof_post, $data_reserva_post, $obs_post]);
+
+                            if ($insert_reserva->rowCount() <= 0) {
+                                echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
+                            } else {
+                                echo "<script language='javascript'>                                                                                                                                    window.alert('Cadastro Realizado com sucesso!');
+                                         window.location='novidades.php?pg=data';
+                                      </script>";
+                            }
+                        } ?>
+                        <form method="post" border="0px" width="900px">
+                            <table>
+                                <tr>
+                                    <td colspan="2"><center>Fazer Reserva do Data Show</center></td>
+                                </tr>
+                                <tr>
+                                    <td>Professor</td>
+                                    <td>Sala</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <select name="professor">
+                                            <option>Selecione o Professor</option>
+                                            <?php $sel_prof = $crud->select('id_professor, nome_professor', 'professor', 'WHERE id_professor IS NOT NULL ORDER BY nome_professor')->run();
+                                            while ($val_prof = $sel_prof->fetch(PDO::FETCH_ASSOC)){
+                                                $id_professor = $val_prof['id_professor'];
+                                                $nome_professor = $val_prof['nome_professor'];
+                                                echo "<option value='$id_professor'>$nome_professor</option>"; 
+                                            }?>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="sala">
+                                            <option>Selecione a Turma</option>
+                                            <?php $sel_sala = $crud->select('id_sala, identificador', 'sala_video', 'WHERE id_sala IS NOT NULL ORDER BY identificador')->run();
+                                            while ($val_sala = $sel_sala->fetch(PDO::FETCH_ASSOC)){
+                                                $id_sala = $val_sala['id_sala'];
+                                                $nome_sala = $val_sala['identificador'];
+                                                echo "<option value='$id_sala'>$nome_sala</option>"; 
+                                            }?>
+                                        </select>
+                                    </td>
+                                </tr>                                            
+                                <tr>
+                                    <td>Data</td>
+                                    <td>Observação</td> 
+                                </tr>
+                                <tr>
+                                    <td><input name="data_reserva" type="date"/></td>
+                                    <td>
+                                        <textarea name="obs" rows="3" cols="40" maxlength="120"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><center><input class="input" id="button" name="cadastra_reserva" value="Cadastrar" type="submit"/></center></td>
+                                </tr>
+                            </table>                                    
+                        </form>
+                    <?php die; } ?>
+                <?php } ?>
+
+                <center>
+                    <a class="a2" href = "novidades.php?pg=data&area=datashow&cadastra=sim">Reservas</a>
+                    <a class="a2" href = "novidades.php?pg=data&area=video&cadastra=sim">Sala de Vídeo</a>
+                </center>
+                <br/>
+                <center><i><b><h1>Proximas Reservas</h1></b></i></center>
+                <table border="0px" width = "900px">                                
+                    <thead>
+                        <th><center><i><b>Sala</b></i></center></th>
+                        <th><center><i><b>Professor</b></i></center></th>
+                        <th><center><i><b>Data da Reserva</b></i></center></th>
+                        <th><center><i><b>Obs</b></i></center></th>
+                    </thead>
+                    <?php
+                    $proximos_4_sabados = date("Y-m-d",mktime(date("H"),date("i"),date("s"),date("m"),date("d")+28,date("Y")));
+
+                    $mostra_todos = $crud->select('r.id_reserva, sv.identificador, p.nome_professor, r.data_reserva, r.obs', 'reserva r', 'INNER JOIN professor p ON p.id_professor = r.id_professor INNER JOIN sala_video sv ON sv.id_sala = r.id_sala WHERE r.id_sala IS NOT NULL AND r.id_professor IS NOT NULL AND r.data_reserva BETWEEN CURRENT_DATE AND ? ORDER BY r.data_reserva')->run([$proximos_4_sabados]);                                                       
+                    while ($valores_reserva = $mostra_todos->fetch(PDO::FETCH_ASSOC)){
+                        $class = @$i % 2 == 0 ? ' class="dif"' : '';                                    
+                        $nome_sala = $valores_reserva['identificador'];
+                        $nome_professor = $valores_reserva['nome_professor'];
+                        $data_reserva = date('d/m/Y', strtotime($valores_reserva['data_reserva']));
+                        $obs = $valores_reserva['obs']; ?>
+                        <tr <?php echo $class; ?>>
+                            <td><?php echo $nome_sala;?></td>
+                            <td><?php echo $nome_professor;?></td>
+                            <td><?php echo $data_reserva;?></td>
+                            <td><?php echo substr($obs, 0, 20);?></td>
+                        </tr>                                                                        
+                    <?php @$i++; } ?>
+                </table>
+
+                <?php
+                    /*
+                //$cod_prof = 1; //Alterar após separar cada parte assim aqui ira receber o código que vem por url post ou get ou sla
+                $busca_plano = $crud->select('s.identificador, rs.data_reserva, rs.obs, p.nome_professor, rs.id_reserva', 'reserva rs', 'INNER JOIN sala_video s ON s.id_sala = rs.id_sala INNER JOIN professor p ON p.id_professor = rs.id_professor WHERE p.id_professor IS NOT NULL')->run([]);
+                //$busca_plano = "SELECT pa.id_plano id, pa.titulo titulo, d.nome_disciplina nome_disc FROM plano_aula pa INNER JOIN disciplina d ON pa.id_disciplina = d.id_disciplina WHERE pa.id_professor = '$cod_prof'";
+                //$sql_busca_plano = mysqli_query($conexao, $busca_plano) or die(mysqli_error($conexao));
+                while ($dados_plano = $busca_plano->fetch(PDO::FETCH_ASSOC)) 
+                     * {
+                     * $class = @$i % 2 == 0 ? ' class="dif"' : '';
+                    $nome_disc = $dados_plano['nome_disc'];
+                    $titulo = $dados_plano['titulo'];
+                    $id_plano = $dados_plano['id'];
+                    ?><!--
+                    <tr>
+                        <td><center><?php echo $nome_disc; ?></center></td>	
+                        <td><center><a href="novidades.php?pg=plano&act=more&plano=<?php echo $id_plano; ?>"><?php echo $titulo; ?></a></center></td>
+                    </tr>-->					
+                <?php } */ ?>
+                </table>
+                <br/> 
+           <?php die; } ?>		
 	</div>
 
 </body>

@@ -2,7 +2,6 @@
 
 header("Content-Type: text/html; charset=utf-8", true);
 require_once 'class/config.class.php';
-//require_once 'class/CRUD.class.php';
 
 $erro = NULL;
 $login = $_REQUEST['login'];
@@ -33,13 +32,6 @@ if ($erro) {
     header("location:login.php?erro=$erro");
 } else {
     //session_start();
-
-
-
-
-
-
-
     header("location:admin/index.php");
 
 //if ($valores['tipo'] == 'ADMINISTRADOR') {

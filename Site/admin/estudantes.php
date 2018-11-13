@@ -3,9 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Estudantes</title>
-        <!--<link rel="stylesheet" type="text/css" href="css/estudantes.css"/>
-        <link rel="stylesheet" type="text/css" href="css/cursos_e_disciplinas.css"/>-->
+        <title>Estudantes</title>       
         <link rel="stylesheet" type="text/css" href="css/estilo.css" />
         <script>
             function mostra_nome_aluno(str) {
@@ -216,9 +214,9 @@
                         if (empty($nome_inscricao)) {
                             echo "<script language='javascript'>window.alert('Digite o nome do aluno');</script>";
                         } else {
-                            $insert_inscricao = $crud->insert('inscricao', 'data_inscricao, nome_aluno, sexo_aluno, email, telefone_responsavel, celular_responsavel', '(:data, :nome, :sexo, :email, :telefone, :celular)')->run([':data' => $data_hora_formato_mysql, ':nome' => $nome_inscricao, ':sexo' => $sexo, ':email' => $email, ':telefone' => $telefone, ':celular' => $celular]);
+                            $insert_inscricao = $crud->insert('inscricao', 'data_inscricao, nome_aluno, sexo_aluno, email, telefone_contato, celular_contato', '(:data, :nome, :sexo, :email, :telefone, :celular)')->run([':data' => $data_hora_formato_mysql, ':nome' => $nome_inscricao, ':sexo' => $sexo, ':email' => $email, ':telefone' => $telefone, ':celular' => $celular]);
 
-                            if ($insert_inscricao->rowCount <= 0) {
+                            if ($insert_inscricao->rowCount() <= 0) {
                                 echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
                             } else {
                                 echo "<script language='javascript'> window.alert('Cadastro Realizado com sucesso!!');</script>";
@@ -259,10 +257,10 @@
                                 }
                                 ?>							
                                 <td>
-                                    <input type="text" name="nome" id="textfield">
+                                    <input type="text" name="nome" title="Insira o nome" id="textfield"/>
                                 </td>
                                 <td>
-                                    <select name="sexo" size="1" id="textfield">
+                                    <select title="Selecione o sexo" name="sexo" size="1" id="textfield">
                                         <option value="MASCULINO">Masculino</option>
                                         <option value="FEMININO">Feminino</option>
                                         <option value="OUTRO">Outro</option>
@@ -276,18 +274,18 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="email" name="email" id="textfield">
+                                    <input type="email" title="Insira o email" name="email" id="textfield"/>
                                 </td>
                                 <td>
-                                    <input type="text" name="telefone" id="textfield" maxlength="10">
+                                    <input type="text" title="Insira o telefone" name="telefone" id="textfield" maxlength="10"/>
                                 </td>
                                 <td>
-                                    <input type="text" name="celular" id="textfield" maxlength="11">
+                                    <input type="text" title="Insira o celular" name="celular" id="textfield" maxlength="11"/>
                                 </td>
                             </tr>    
                             <tr>
                                 <td>
-                                    <input class="input" type="submit" name="button" id="button" value="Cadastrar">
+                                    <input class="input" title="Cadastrar" type="submit" name="button" id="button" value="Cadastrar"/>
                                 </td>                                
                             </tr>
                         </table>
@@ -301,7 +299,7 @@
                 <!CONSULTA DA LISTA DE ESPERA>
                 
                 <br/>
-                <a class="a2" href="estudantes.php?pg=espera&amp;cadastra=sim">Cadastrar na lista de espera</a>
+                <a class="a2" title="Cadastrar alunos na lista de espera" href="estudantes.php?pg=espera&amp;cadastra=sim">Cadastrar na lista de espera</a>
 
                 <?php
                 $select_inscricao = $crud->select('id_inscricao, data_inscricao, nome_aluno, email, telefone_contato, celular_contato', 'inscricao', 'WHERE nome_aluno IS NOT NULL ORDER BY data_inscricao ASC')->run();
@@ -744,11 +742,7 @@
 
                 $cod_aluno = $_GET['aluno'];
                 
-                $select_tudo_aluno = $crud->select('a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_contato telefone_contato, i.celular_contato celular_contato, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.data_nascimento_responsavel, r.sexo_responsavel sexo_responsavel, r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, a.rua_aluno rua_aluno, a.numero_aluno numero_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, a.data_matricula dt_matricula, t.nome_turma nome_turma, a.id_turma id_turma', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno'
-                                . ' INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel'
-                                . ' INNER JOIN turma t ON a.id_turma = t.id_turma'
-                                . ' WHERE a.id_aluno = :id_aluno')
-                        ->run([':id_aluno' => $cod_aluno]);
+                $select_tudo_aluno = $crud->select('a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_contato telefone_contato, i.celular_contato celular_contato, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.data_nascimento_responsavel, r.sexo_responsavel sexo_responsavel, r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, a.rua_aluno rua_aluno, a.numero_aluno numero_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, a.data_matricula dt_matricula, t.nome_turma nome_turma, a.id_turma id_turma', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel INNER JOIN turma t ON a.id_turma = t.id_turma WHERE a.id_aluno = ?')->run([$cod_aluno]);
                 
                 $dados = $select_tudo_aluno->fetch(PDO::FETCH_ASSOC);
                 
@@ -1040,21 +1034,21 @@
                         }
                     } ?>
 
-                    <form name="form1" method="post" action="">
-                        <table width="900" border="0">                                                           
+                    <form name="form1" method="post">
+                        <table width="900" border="0">
                             <tr>
                                 <td>Código de inscrição:</td>
                                 <td>Nome completo:</td>
                                 <td>Data de nascimento:</td>
                             </tr>
                             <tr>
-                                <td><input type="number" name="cod_inscricao" onkeyup="mostra_nome_aluno(this.value)" /></td>
-                                <td>							
+                                <td><input type="number" title="Insira o código de inscrição" name="cod_inscricao" onkeyup="mostra_nome_aluno(this.value)" /></td>
+                                <td>
                                     <div id = "mostra_nome_aluno">
                                         <input type="text" disabled="disabled"/>
-                                    </div>										
+                                    </div>
                                 </td>
-                                <td><input type="date" name="data_nascimento_aluno" /></td>
+                                <td><input type="date" title="Selecione a data de nascimento" name="data_nascimento_aluno" /></td>
                             </tr>
                             <tr>
                                 <td>RG:</td>
@@ -1063,10 +1057,10 @@
                                 <td>Número:</td>
                             </tr>
                             <tr>
-                                <td><input type="text" name="rg_aluno" maxlength="14"/></td>
-                                <td><input type="text" name="cpf_aluno" maxlength="11"/></td>
-                                <td><input type="text" name="rua_aluno" maxlength="11"/></td>
-                                <td><input type="text" name="numero_aluno"/></td>
+                                <td><input type="text" title="Insira o RG" name="rg_aluno" maxlength="14"/></td>
+                                <td><input type="text" title="Insira o CPF" name="cpf_aluno" maxlength="11"/></td>
+                                <td><input type="text" title="Insira o rua" name="rua_aluno" maxlength="11"/></td>
+                                <td><input type="text" title="Insira o número residêncial" name="numero_aluno"/></td>
                             </tr>
                             <tr>														  	
                                 <td>Bairro:</td>
@@ -1074,29 +1068,29 @@
                                 <td>Complemento:</td>
                             </tr>
                             <tr>
-                                <td><input type="text" name="bairro_aluno" /></td>
-                                <td><input type="text" name="cidade_aluno" /></td>
-                                <td><input type="text" name="complemento_aluno" /></td>
+                                <td><input type="text" title="Insira o bairro" name="bairro_aluno" /></td>
+                                <td><input type="text" title="Insire a cidade" name="cidade_aluno" /></td>
+                                <td><input type="text" title="Insire algun complemento" name="complemento_aluno" /></td>
                             </tr>
-                            <tr>      								
+                            <tr>
                                 <td>Cep:</td>
                                 <td>Escolaridade:</td>
                                 <td>Escola:</td> 
                             </tr>
                             <tr>								
-                                <td><input type="text" name="cep_aluno" maxlength="8" /></td>
+                                <td><input type="text" title="Insira o CEP" name="cep_aluno" maxlength="8" /></td>
                                 <td>
-                                    <select name="escolaridade" size="1" >
+                                    <select name="escolaridade" title="Selecione a escolaridade" size="1" >
                                         <option value="Ensino fundamental cursando">Ensino fundamental cursando</option>
                                         <option value="Ensino fundamental concluído">Ensino fundamental concluído</option>
                                         <option value="Ensino médio cursando">Ensino médio cursando</option>
                                         <option value="Ensino médio concluído">Ensino médio concluído</option>
                                     </select>									
                                 </td>
-                                <td><input type="text" name="escola" /></td>
-                            </tr>							
+                                <td><input type="text" name="escola" title="Insira o nome da escola" /></td>
+                            </tr>
                             <tr>
-                                <td colspan="3"><center><input class="input" type="submit" name="button" value="Avançar"/></center></td>
+                                <td colspan="3"><center><input class="input" title="Avançar" type="submit" name="button" value="Avançar"/></center></td>
                             </tr>
                         </table>
                     </form>
@@ -1130,7 +1124,7 @@
                         }
                     } ?>
 
-                    <form name="form1" method="post" action="">
+                    <form name="form1" method="post">
                         <table width="900" border="0">
                             <tr>
                                 <td><b>Código do responsável:</b></td>			
@@ -1154,15 +1148,15 @@
                                         <input type="hidden" name="id_responsavel" value="<?php echo $novo_id; ?>" />
                                     <?php }
                                 } ?>
-                                <td><input type="text" name="nome_responsavel" /></td>
+                                <td><input type="text" title="Insira o nome do responsável" name="nome_responsavel" /></td>
                                 <td>
-                                    <select name="sexo_responsavel" size="1" >
+                                    <select name="sexo_responsavel" title="Selecione o sexo do responsável" size="1" >
                                         <option value="MASCULINO">Masculino</option>
                                         <option value="FEMININO">Feminino</option>
                                         <option value="OUTRO">Outro</option>
                                     </select>
                                 </td>
-                                <td><input type="date" name="data_nasc_resp" /></td>     
+                                <td><input type="date" title="Selecione a data de nascimento do responsável" name="data_nasc_resp" /></td>     
                             </tr>
                             <tr>
                                 <td>CPF do responsável:</td>
@@ -1170,12 +1164,13 @@
                                 <td>E-mail do responsável:</td>
                             </tr>
                             <tr>
-                                <td><input type="text" name="cpf_responsavel" maxlength="11"/></td>
-                                <td><input type="text" name="rg_responsavel" maxlength="14"/></td>
-                                <td><input type="email" name="email_responsavel" /></td>
+                                <td><input type="text" title="Insira o CPF do responsável" name="cpf_responsavel" maxlength="11"/></td>
+                                <td><input type="text" title="Insira o RG do responsável" name="rg_responsavel" maxlength="14"/></td>
+                                <td><input type="email" title="Insira o email do Responsável" name="email_responsavel" /></td>
                             </tr>    
                             <tr>
-                                <td colspan="3"><input class="input" type="submit" name="button" id="button" value="Concluir"/></td>				</tr>
+                                <td colspan="3"><input class="input" title="Concluir" type="submit" name="button" id="button" value="Concluir"/></td>
+                            </tr>
                         </table>
                     </form>
                     <br/>			
@@ -1201,7 +1196,7 @@
             <!BUSCANDO ESTUDANTES NO BANCO>
 
             <?php if (@$_GET['pg'] == 'aluno') { ?>
-                <a class="a2" href="estudantes.php?pg=cadastra&etapa=1">Cadastrar alunos</a>
+                <a class="a2" title="Fazer o cadastro de um aluno" href="estudantes.php?pg=cadastra&etapa=1">Cadastrar alunos</a>
                 <h1>Alunos cadastradados</h1>
                 <br/>
                 <?php 

@@ -12,7 +12,7 @@ $erro = empty($_REQUEST['erro']) ? NULL : $_REQUEST['erro'];
     </head>
     <body>
         <div id="logo">
-            <img src="img/logoEtec.png" />
+            <img src="img/logoEtec.png" title="Logo etec"/>
         </div>
         <div id="caixa_login"> 
 <?php echo $mostra_erro = is_null($erro) ? NULL : '<h2>'.$erro.'</h2>'; ?>           
@@ -25,7 +25,7 @@ $erro = empty($_REQUEST['erro']) ? NULL : $_REQUEST['erro'];
                     </tr>
                     <tr>
                         <td>
-                            <input type="text" name="login" />
+                            <input type="text" name="login" title="Insira um usuário" />
                         </td>
                     </tr>
                     <tr>
@@ -35,12 +35,12 @@ $erro = empty($_REQUEST['erro']) ? NULL : $_REQUEST['erro'];
                     </tr>
                     <tr>
                         <td>
-                            <input type="password" name="senha" />
+                            <input type="password" name="senha" title="Insire uma senha" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input class="input" type="submit" name="entrar" value="Entrar" />
+                            <input class="input" title="Entrar no sistema" type="submit" name="entrar" value="Entrar" />
                         </td>
                     </tr>
                 </table>

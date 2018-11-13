@@ -3,8 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Chamada</title>
-        <!--<link rel="stylesheet" type="text/css" href="css/cursos_e_disciplinas.css"/>-->
+        <title>Chamada</title>        
         <link rel="stylesheet" type="text/css" href="css/estilo.css" />
     </head>
     <body>
@@ -39,7 +38,7 @@
                         <tr>
                             <td>Selecione a Turma:</td>
                             <td>
-                                <select name="turma" style="width:60px">
+                                <select name="turma" title="Selecione a turma" style="width:60px">
                                     <?php
                                     $select_turma = $crud->select('id_turma, nome_turma', 'turma', 'WHERE nome_turma IS NOT NULL ORDER BY nome_turma ASC')->run();
                                     while ($valores_turma = $select_turma->fetch(PDO::FETCH_ASSOC)) {
@@ -52,7 +51,7 @@
                             </td>
                             <td>Selecione o Professor:</td>
                             <td>
-                                <select name="professor">
+                                <select name="professor" title="Selecione o professor">
                                     <?php
                                     $select_professor = $crud->select('id_professor, nome_professor', 'professor', 'WHERE nome_professor IS NOT NULL ORDER BY nome_professor ASC')->run();
                                     while ($valores_professor = $select_professor->fetch(PDO::FETCH_ASSOC)) {
@@ -71,7 +70,7 @@
                                 ?>" style="width:80px" disabled>
                             </td>
                             <td>						
-                                <input type="submit" name="buscar" value="Buscar" class="input" id="button">
+                                <input type="submit" name="buscar" value="Buscar" class="input" id="button" title="Buscar" />
                             </td>
                         </tr>
                     </table>
@@ -93,7 +92,7 @@
                     ?>
 
                     <h1>Chamada na data de hoje</h1>
-                    <form name="modifica" enctype="multipart/form-data" action="">
+                    <form name="modifica" enctype="multipart/form-data">
                         <table width='900'>
                             <tr>
                                 <td>Nome</td>
@@ -119,7 +118,7 @@
                                     <td><input type="hidden" value="<?php echo $id_aluno; ?>" name="id_aluno"/><?php echo $nome; ?> </td>
                                     <td><input type="hidden" value="<?php echo $data_usa; ?>" name="data_chamada"/> <?php echo $data_sem_formatacao; ?> </td>
                                     <td style="background-color: <?php echo $cor; ?>"><input type="hidden" value="<?php echo $status; ?>" name="status"/> <?php echo $mascara_status; ?> </td>
-                                    <td><a title="Modificar o aluno <?php echo $nome; ?>" href="fazer_chamada.php?turma=<?php echo $cod_turma; ?>&professor=<?php echo $cod_professor; ?>&aluno=<?php echo $id_aluno; ?>&data_chamada=<?php echo $data_usa; ?>&status=<?php echo $status; ?>" class="input" name="alterar" >alterar</a></td>								
+                                    <td><a title="Modificar o aluno <?php echo $nome; ?>" href="fazer_chamada.php?turma=<?php echo $cod_turma; ?>&professor=<?php echo $cod_professor; ?>&aluno=<?php echo $id_aluno; ?>&data_chamada=<?php echo $data_usa; ?>&status=<?php echo $status; ?>" class="input" name="alterar" >alterar</a></td>                                            
                                 </tr>								
                             <?php } ?>					
                         </table>
@@ -138,7 +137,6 @@
 
                     <?php
                     $select_nome_id_aluno = $crud->select('a.id_aluno, i.nome_aluno', 'aluno a', 'INNER JOIN inscricao i ON i.id_inscricao = a.id_aluno INNER JOIN turma t ON t.id_turma = a.id_turma WHERE t.id_turma = ? ORDER BY i.nome_aluno ASC')->run([$cod_turma]);
-                    //$select_nome_id_aluno = $crud->select('m.id_aluno, i.nome_aluno', 'matricula m', 'INNER JOIN aluno a ON a.id_aluno = m.id_aluno INNER JOIN inscricao i ON i.id_inscricao = a.id_aluno INNER JOIN turma t ON t.id_turma = m.id_turma WHERE t.id_turma = ? ORDER BY i.nome_aluno ASC')->run([$cod_turma]);
                     $numRows = $select_nome_id_aluno->rowCount();
 
                     if ($numRows <= 0) {
@@ -160,7 +158,7 @@
                         $alunosNomes = explode("|", $alunosNomes);
                         ?>
 
-                        <form name="chamada" method="post" enctype="multipart/form-data" action="">
+                        <form name="chamada" method="post" enctype="multipart/form-data">
                             <?php for ($i = 0; $i < $numRows; $i++) { ?>
                                 <table width="955" border="0">
                                     <tr>
@@ -191,7 +189,7 @@
                             <table width="955" style="background-color: #2C82CE; border-color: #2C82CE">
                                 <tr>
                                     <td width="62">
-                                        <center><input type="submit" name="guardar" id="button" class="input" value="Concluir"/></center>
+                                        <center><input type="submit" name="guardar" id="button" class="input" title="Concluir" value="Concluir"/></center>
                                     </td>								
                                 </tr>								  							
                             </table>

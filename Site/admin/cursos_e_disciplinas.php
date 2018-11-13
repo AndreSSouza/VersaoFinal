@@ -4,7 +4,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Turmas</title>
-        <!--<link rel="stylesheet" type="text/css" href="css/cursos_e_disciplinas.css"/>-->
         <link rel="stylesheet" type="text/css" href="css/estilo.css" />
     </head>
     <body>	
@@ -128,9 +127,9 @@
                                 <td>
                                     <input type="number" name="qtde_alunos" id="textfield" min="1" value="<?php echo $quantidade_alunos; ?>">
                                 </td>
-                                <tr>
-                                    <td><center><input class="input" type="submit" name="salvar" value="Salvar"/> <a class="a2" href="cursos_e_disciplinas.php?pg=turma">Cancelar</a></center></td>
-                                </tr>
+                            <tr>
+                                <td><center><input class="input" type="submit" name="salvar" value="Salvar"/> <a class="a2" href="cursos_e_disciplinas.php?pg=turma">Cancelar</a></center></td>
+                            </tr>
                         </table>
                     </form>
                     <?php
@@ -178,7 +177,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" name="nome_turma" id="textfield">
+                                    <input type="text" title="Insira o nome da turma" name="nome_turma" id="textfield"/>
                                 </td>
                             </tr>
                             <tr>
@@ -188,12 +187,12 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="number" name="qtde_alunos" id="textfield" min="1">
+                                    <input type="number" title="Insira a quantidade máxima de aluno que a turma terá" name="qtde_alunos" id="textfield" min="1"/>
                                 </td>
                             </tr>
                             <td>
                                 <td>
-                                    <input class="input" type="submit" name="cadastra_turma" id="button" value="Cadastrar">
+                                    <input class="input" title="Cadastrar" type="submit" name="cadastra_turma" id="button" value="Cadastrar"/>
                                 </td>
                                 </tr>
                         </table>
@@ -206,7 +205,7 @@
 
                 <!VISUALIZAR AS TURMAS CADASTRADAS>
                 <br/> 
-                <a class="a2" href="cursos_e_disciplinas.php?pg=turma&amp;cadastra=sim">Cadastrar turma</a>
+                <a class="a2" title="Cadastrar uma turma" href="cursos_e_disciplinas.php?pg=turma&amp;cadastra=sim">Cadastrar turma</a>
 
                 <?php
                 $select_turma = $crud->select('id_turma, nome_turma, quantidade_alunos, disponivel', 'turma', 'ORDER BY nome_turma')->run();

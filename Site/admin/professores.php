@@ -4,8 +4,18 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Professor</title>
-        <!--<link rel="stylesheet" type="text/css" href="css/cursos_e_disciplinas.css"/>-->
         <link rel="stylesheet" type="text/css" href="css/estilo.css" />
+        <script>
+            function formatar(mascara, documento){
+                var i = documento.value.length;
+                var saida = mascara.substring(0,1);
+                var texto = mascara.substring(i)
+
+                if (texto.substring(0,1) != saida){
+                    documento.value += texto.substring(0,1);
+                }
+            }
+        </script>
     </head>
     <body>
         <?php if (@$_GET['pg'] == 'professor') { ?>
@@ -18,8 +28,7 @@
                     <?php
                     $cod_professor = $_GET['professor'];
                     $select_professor = $crud->select('*', 'professor', 'WHERE id_professor = ?')->run([$cod_professor]);
-                    //$professor = "SELECT * FROM professor WHERE id_professor = '$cod_professor'";
-                    //$sql_professor = mysqli_query($conexao, $professor)or die(mysqli_error($conexao));
+                        
                     $prof_val = $select_professor->fetch(PDO::FETCH_ASSOC);
 
                     $dt_nasc_prof = $prof_val['data_nascimento_professor'];
@@ -158,8 +167,6 @@
                         </tr>						
                         <?php
                         $select_disc_prof = $crud->select('*', 'disciplina_ministrada dm', 'INNER JOIN professor p ON dm.id_professor = p.id_professor INNER JOIN disciplina d on d.id_disciplina = dm.id_disciplina WHERE p.id_professor = ?')->run([$cod_professor]);
-                        //$disc_prof = "SELECT * FROM disciplina_ministrada dm INNER JOIN professor p ON dm.id_professor = p.id_professor INNER JOIN disciplina d on d.id_disciplina = dm.id_disciplina WHERE p.id_professor = '$cod_professor'";
-                        //$sql_disc_prof = mysqli_query($conexao, $disc_prof)or die(mysqli_error($conexao));
 
                         while ($disc = $select_disc_prof->fetch(PDO::FETCH_ASSOC)) {
                             ?>
@@ -194,10 +201,7 @@
                     $cod_materia = $_GET['mat'];
                     $cod_professor = $_GET['professor'];
 
-                    $delete_dm = $crud->delete('disciplina_ministrada', 'WHERE id_professor = ? AND id_disciplina = ?')->run([$cod_professor, $cod_materia]);
-
-                    //$deleta_materia = "DELETE FROM disciplina_ministrada WHERE id_professor = '$cod_professor' AND id_disciplina = '$cod_materia'";
-                    //$sql_del_mat = mysqli_query($conexao, $deleta_materia)or die(mysqli_error($conexao));
+                    $delete_dm = $crud->delete('disciplina_ministrada', 'WHERE id_professor = ? AND id_disciplina = ?')->run([$cod_professor, $cod_materia]);                   
 
                     echo "<script language='javascript'>window.location='professores.php?pg=professor&op=visualizar&professor=$cod_professor';</script>";
                 }
@@ -212,8 +216,7 @@
                     <?php
                     $cod_professor = $_GET['professor'];
                     $select_professor = $crud->select('*', 'professor', 'WHERE id_professor = ?')->run([$cod_professor]);
-                    //$professor = "SELECT * FROM professor WHERE id_professor = '$cod_professor'";
-                    //$sql_professor = mysqli_query($conexao, $professor)or die(mysqli_error($conexao));
+                    
                     $prof_val = $select_professor->fetch(PDO::FETCH_ASSOC);
 
                     $dt_nasc_prof = $prof_val['data_nascimento_professor'];
@@ -257,10 +260,7 @@
 
                             $update_professor = $crud->update('professor', 'data_nascimento_professor = :dt_nasc, nome_professor = :nome, sexo_professor = :sexo, cpf = :cpf, rg_professor = :rg, logradouro_professor = :log, bairro_professor = :bairro, cidade_professor = :cidade, complemento_professor = :comp, cep_professor = :cep, telefone_professor = :tel, celular_professor = :cel, email = :email, formacao = :formacao', 'WHERE id_professor = :id')
                                     ->run([':dt_nasc' => $data_nascimento_professor, ':nome' => $nome_professor, ':sexo' => $sexo_professor, ':cpf' => $cpf_professor, ':rg' => $rg_professor, ':log' => $logradouro_professor, ':bairro' => $bairro_professor, ':cidade' => $cidade_professor, ':comp' => $complemento_professor, ':cep' => $cep_professor, ':tel' => $telefone_professor, ':cel' => $celular_professor, ':email' => $email_professor, ':formacao' => $formacao_professor, ':id' => $cod_professor]);
-
-                            //$update_turma = "UPDATE professor SET data_nascimento_professor = '$data_nascimento_professor', nome_professor = '$nome_professor', sexo_professor = '$sexo_professor', cpf = '$cpf_professor', rg_professor = '$rg_professor', logradouro_professor = '$logradouro_professor', bairro_professor = '$bairro_professor', cidade_professor = '$cidade_professor', complemento_professor = '$complemento_professor', cep_professor = '$cep_professor', telefone_professor = '$telefone_professor', celular_professor = '$celular_professor', email = '$email_professor', formacao = '$formacao_professor' WHERE professor.id_professor = '$cod_professor'";
-                            //$sql_update_turma = mysqli_query($conexao, $update_turma) or die(mysqli_error($conexao));
-
+                            
                             echo "<script language='javascript'> window.alert('Professor(a) atualizado(a) com Sucesso'); window.location='professores.php?pg=professor';</script>";
                         }
                     }
@@ -408,14 +408,12 @@
 
                     $update_troca_status = $crud->update('professor', 'status_professor = ?', 'WHERE id_professor = ?')->run([$val, $cod_professor]);
 
-                    //mysqli_query($conexao, $muda_status_prof) or die(mysqli_error($conexao));
-
                     echo "<script language='javascript'> window.alert('Status do(a) Professor(a) foi modificado(a) com sucesso'); window.location='professores.php?pg=professor';</script>";
                 }
                 ?>			
                 <!>
 
-                <a class="a2" href="professores.php?pg=cadastra_professor">Cadastrar Professor</a>
+                <a class="a2" title="Cadastrar os professores" href="professores.php?pg=cadastra_professor">Cadastrar Professor</a>
 
                 <!VISUALIZAR OS PROFESSORES CADASTRADOS>
 
@@ -423,8 +421,6 @@
 
                 <?php
                 $select_professor = $crud->select('*', 'professor', 'WHERE nome_professor IS NOT NULL')->run();
-                //"SELECT * FROM professor WHERE nome_professor != ''";
-                //$consulta_select_professor = mysqli_query($conexao, $sql_select_professor) or die(mysqli_error($conexao));
 
                 if ($select_professor->rowCount() <= 0) {
                     echo "No momento não existe professores cadastrados!";
@@ -452,7 +448,7 @@
                             <tr <?php echo $class; ?>>                                
                                 <td><?php echo $cod_professor; ?></td>
                                 <td><?php echo $nome_professor; ?></td>							
-                                <td><h3><?php echo $cpf_professor; ?></td>
+                                <td><?php echo $cpf_professor; ?></td>
                                 <td><?php echo $email_professor; ?></td>
                                 <td style="color: #A00C0E">								
                                     <a href="professores.php?pg=professor&amp;op=visualizar&professor=<?php echo $cod_professor; ?>" ><img title="Visualizar o Professor <?php echo $nome_professor; ?>" src="img/lupa_turma.png" width="18" height="18" border="0"/></a>
@@ -479,9 +475,6 @@
 
         <?php if (@$_GET['pg'] == 'cadastra_professor') { ?>
             <div id="box_curso">
-                <br/>			
-                <a class="a2" href="professores.php?pg=cadastra_professor">Cadastrar Professor</a>
-                <br/><br/>
                 <h1>Cadastrar um novo professor</h1>
                 <?php
                 if (isset($_POST['button'])) {
@@ -504,10 +497,6 @@
 
                     $insert_professor = $crud->insert('professor', 'data_nascimento_professor, nome_professor, sexo_professor, cpf, rg_professor, rua_professor, numero_professor, bairro_professor, cidade_professor, complemento_professor, cep_professor, telefone_professor, celular_professor, email, formacao', '(:dt_nasc, :nome, :sexo, :cpf, :rg, :rua, :num, :bairro,  :cidade, :comp, :cep, :tel, :cel, :email, :formacao')->run([':dt_nasc' => $data_nascimento_professor, ':nome' => $nome_professor, ':sexo' => $sexo_professor, ':cpf' => $cpf_professor, ':rg' => $rg_professor, ':rua' => $rua_professor, ':num' => $numero_professor, ':bairro' => $bairro_professor, ':cidade' => $cidade_professor, ':comp' => $complemento_professor, ':cep' => $cep_professor, ':tel' => $telefone_professor, ':cel' => $celular_professor, ':email' => $email_professor, ':formacao' => $formacao_professor]);
 
-
-                    //$sql_insert_professor = "INSERT INTO professor (data_nascimento_professor, nome_professor, sexo_professor, cpf, rg_professor, logradouro_professor, bairro_professor, cidade_professor, complemento_professor, cep_professor, telefone_professor, celular_professor, email, formacao) VALUES ('$data_nascimento_professor', '$nome_professor', '$sexo_professor', '$cpf_professor', '$rg_professor', '$logradouro_professor', '$bairro_professor', '$cidade_professor', '$complemento_professor','$cep_professor', '$telefone_professor', '$celular_professor', '$email_professor','$formacao_professor')";
-                    //$insert_professor = mysqli_query($conexao, $sql_insert_professor) or die(mysqli_error($conexao));
-
                     if ($insert_professor->rowCount() <= 0) {
                         echo "<script language='javascript'>window.alert('Ocorreu um erro ao cadastrar o professor!');</script>";
                     }
@@ -524,8 +513,6 @@
                             <td>
                                 <?php
                                 $select_last_id = $crud->select('id_professor', 'professor', 'ORDER BY id_professor DESC LIMIT 1')->run();
-                                //$sql_select_professor_ultimo_id = "SELECT * FROM professor ORDER BY id_professor DESC LIMIT 1";
-                                //$select_professor_ultimo_id = mysqli_query($conexao, $sql_select_professor_ultimo_id) or die(mysqli_error($conexao));
 
                                 if ($select_last_id->rowCount() <= 0 ) {
                                     $novo_id_professor = 1; ?>
@@ -543,10 +530,10 @@
                                 } ?>
                                         </td>
                                         <td>
-                                            <input type="text" name="nome_professor" id="textfield2" maxlength="120">
+                                            <input type="text" title="Insira o nome" name="nome_professor" id="textfield2" maxlength="120">
                                         </td>
                                         <td>
-                                            <input type="date" name="data_nascimento_professor" id="textfield3">
+                                            <input type="date" title="Selecione a data de nascimento" name="data_nascimento_professor" id="textfield3">
                                         </td>
                                         </tr>
                                         <tr>
@@ -556,17 +543,17 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <select name="sexo_professor" size="1" id="textfield">
+                                                <select name="sexo_professor" title="Selecione o sexo" size="1" id="textfield">
                                                     <option value="MASCULINO">Masculino</option>
                                                     <option value="FEMININO">Feminino</option>
                                                     <option value="OUTRO">Outro</option>
                                                 </select>							
                                             </td>
                                             <td>
-                                                <input type="text" name="cpf_professor" id="textfield4" maxlength="11">
+                                                <input type="text" name="cpf_professor"  title="Insire o CPF" id="textfield4" maxlength="14" OnKeyPress="formatar('###.###.###-##', this)" >
                                             </td>
                                             <td>
-                                                <input type="text" name="rg_professor" id="textfield5" maxlength="14">
+                                                <input type="text" name="rg_professor" title="Insire o RG" id="textfield5" maxlength="14">
                                             </td>
                                         </tr>
                                         <tr>
@@ -577,16 +564,16 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" name="rua_professor" id="textfield6">
+                                                <input type="text" title="Insire a rua" name="rua_professor" id="textfield6">
                                             </td>						
                                             <td>
-                                                <input type="text" name="numero_professor" id="textfield6">
+                                                <input type="text" title="Insire o número" name="numero_professor" id="textfield6">
                                             </td>						
                                             <td>
-                                                <input type="text" name="bairro_professor" id="textfield8">
+                                                <input type="text" title="Insire o bairro" name="bairro_professor" id="textfield8">
                                             </td>
                                             <td>
-                                                <input type="text" name="cidade_professor" id="textfield6">
+                                                <input type="text" title="Insire a cidade" name="cidade_professor" id="textfield6">
                                             </td>
                                         </tr>
                                         <tr>		
@@ -596,29 +583,29 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" name="complemento_professor" id="textfield7">
+                                                <input type="text" title="Insire o complemento" name="complemento_professor" id="textfield7">
                                             </td>
                                             <td>
-                                                <input type="text" name="cep_professor" id="textfield8" maxlength="8">
+                                                <input type="text" title="Insire o CEP" OnKeyPress="formatar('#####-###', this)" name="cep_professor" id="textfield8" maxlength="9">
                                             </td>
                                             <td>
-                                                <input type="text" name="telefone_professor" id="textfield6" maxlength="10">
+                                                <input type="text" title="Insire o telefone" name="telefone_professor" id="textfield6" maxlength="12" OnKeyPress="formatar('##-####-####', this)"> 
                                             </td>
                                         </tr>
                                         <tr>						
-                                            <td>celular:</td>
+                                            <td>Celular:</td>
                                             <td>E-mail:</td>
                                             <td>Formação:</td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" name="celular_professor" id="textfield7" maxlength="11">
+                                                <input type="text" title="Insire o celular" name="celular_professor" id="textfield7" maxlength="13"  OnKeyPress="formatar('##-#####-####', this)">
                                             </td>
                                             <td>
-                                                <input type="email" name="email_professor" id="textfield8">
+                                                <input type="email" title="Insire o email" name="email_professor" id="textfield8">
                                             </td>
                                             <td>
-                                                <input type="text" name="formacao_professor" id="textfield6">
+                                                <input type="text" title="Insire a formação" name="formacao_professor" id="textfield6">
                                             </td>
                                         </tr>
                                         <tr>
@@ -627,7 +614,7 @@
                                         <tr>
                                         </tr>
                                         <tr>
-                                            <td colspan="3"><input class="input" type="submit" name="button" id="button" value="Cadastrar"></td>
+                                            <td colspan="3"><input class="input" type="submit" name="button" id="button" title="Cadastre" value="Cadastrar"></td>
                                         </tr>
                                         </table>
                                         </form>
@@ -647,8 +634,7 @@
                                                 
                                                 $cod_disc = $_GET['disc'];
                                                 $select_disc = $crud->select('nome_disciplina', 'disciplina', 'WHERE id_disciplina = ?')->run([$cod_disc]);
-                                                //$seleciona_disc = "SELECT * FROM disciplina WHERE id_disciplina = '$cod_disc'";
-                                                //$retorna_nome = mysqli_query($conexao, $seleciona_disc)or die(mysqli_error($conexao));
+                                                
                                                 $valor_disc = $select_disc->fetch(PDO::FETCH_ASSOC);
                                                 $nome_disc = $valor_disc['nome_disciplina'];
                                                 ?>
@@ -669,10 +655,7 @@
                                                         <td colspan="2"><center><strong><i>Professores que Ministram esta Disciplina</i></strong></center></td>
                                                     </tr>
                                                     <?php
-                                                    $disc_dis = $crud->select('dm.id_professor, p.nome_professor', 'disciplina_ministrada dm', 'INNER JOIN disciplina d on d.id_disciplina = dm.id_disciplina INNER JOIN professor p ON dm.id_professor = p.id_professor WHERE d.id_disciplina = ?')->run([$cod_disc]);
-                                                    //$disc_dis = "SELECT * FROM disciplina_ministrada dm INNER JOIN disciplina d on d.id_disciplina = dm.id_disciplina INNER JOIN professor p ON dm.id_professor = p.id_professor WHERE d.id_disciplina= '$cod_disc'";
-
-                                                    //$sql_disc = mysqli_query($conexao, $disc_dis)or die(mysqli_error($conexao));
+                                                    $disc_dis = $crud->select('dm.id_professor, p.nome_professor', 'disciplina_ministrada dm', 'INNER JOIN disciplina d on d.id_disciplina = dm.id_disciplina INNER JOIN professor p ON dm.id_professor = p.id_professor WHERE d.id_disciplina = ?')->run([$cod_disc]);                                                 
 
                                                     if ($disc_dis->rowCount() > 0) {
                                                         while ($prof_nomes = $disc_dis->fetch(PDO::FETCH_ASSOC)) { ?>
@@ -861,7 +844,7 @@
                                             }
                                             ?>
 
-                                            <form name="form1" method="post" action="">
+                                            <form name="form1" method="post">
                                                 <table width="900" border="0">
                                                     <tr>
                                                         <td width="134">Código da Matéria:</td>
@@ -897,12 +880,12 @@
                                                         }
                                                         ?>	
                                                         <td>
-                                                            <input type="text" name="nome_materia" id="textfield" maxlength="30">
-                                                        </td>							
+                                                            <input type="text" name="nome_materia" title="Insira o nome" id="textfield" maxlength="30"/>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <input class="input" type="submit" name="cadastra_materia" id="button" value="Cadastrar">
+                                                            <input class="input" title="Cadastre" type="submit" name="cadastra_materia" id="button" value="Cadastrar"/>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -918,8 +901,6 @@
 
                                     <?php if (@$_GET['pg'] == 'disciplinas_ministradas') { ?>
                                         <div id="box_curso">
-                                            
-                                            <!--<a class="a2" href="professores.php?pg=cadastra_disciplinas_ministradas">Cadastrar Disciplinas Ministradas</a>-->
 
                                             <!VISUALIZAR OS PROFESSORES & MATERIAS CADASTRADOS>
 
