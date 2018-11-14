@@ -149,18 +149,20 @@
                         $titulo = $dados_plano['titulo'];
                         $id_plano = $dados_plano['id'];
                         ?>                                        					
-                        <tr <?php echo $class; ?>>
+                        <tr <?php echo $class; ?> onclick="location.href = 'novidades.php?pg=plano&act=more&plano=<?php echo $id_plano; ?>'">
                             <td><center><?php echo $nome_disc; ?></center></td>	
-                            <td><center><a href="novidades.php?pg=plano&act=more&plano=<?php echo $id_plano; ?>"><?php echo $titulo; ?></a></center></td>
+                            <td><center><?php echo $titulo; ?></center></td>
                         </tr>
                                         					
                     <?php @$i++; } ?>
                 </table>
                 <br/>
             <?php } ?>
-		
-            <?php if (@$_GET['pg'] == 'data') {?>                                            
+    <!Parte das reservas e sala de video>
+            <?php if (@$_GET['pg'] == 'data') {?> 
+        <!Area responsavel pela sala de Video>
                 <?php if (@$_GET['area'] == 'video') { ?> 
+            <!Visualização da sala de video>
                     <?php if (@$_GET['mod'] == 'view') { 
                         $cod_sala = $_GET['sala'];
                         
@@ -205,6 +207,7 @@
                            <?php @$i++; }?>
                         </table>
                     <?php die; } ?> 
+                <!Alteração de Sala de Video>
                     <?php if (@$_GET['mod'] == 'alt') { 
                         
                         $cod_sala = $_GET['sala'];
@@ -267,15 +270,18 @@
                                 }
                             } else { 
                                 echo '<script language="javascript">window.location="novidades.php?pg=data&area=video&mod=view&sala='.$cod_sala.'";</script>';
-                            } 
-                        } ?>                        
+                            }                          
+                            
+                        } else if (isset ($_POST['cancelar'])) {
+                            echo '<script language="javascript">window.location="novidades.php?pg=data&area=video&mod=view&sala='.$cod_sala.'";</script>';
+                        } ?>
                     <?php die; } ?>
-                
+                <!Cadastrar Sala de Video>
                     <?php if (@$_GET['cadastra'] == 'sim') { ?>  
 
                         <h1>Cadastrar Sala</h1>
 
-                        <?php if (isset($_POST['cadastra_turma'])) {
+                        <?php if (isset($_POST['cadastra_sala'])) {
 
                             $nome_sala = $_POST['nome_sala']; 
                             $insert_sala = $crud->insert('sala_video', 'identificador', '(?)')->run([$nome_sala]);
@@ -298,7 +304,7 @@
                                     <td><input type="text" name="nome_sala" maxlength="3"/></td>
                                 </tr>
                                 <tr>
-                                    <td><center><input class="input" type="submit" name="cadastra_turma" id="button" value="Cadastrar"/></center></td>
+                                    <td><center><input class="input" type="submit" name="cadastra_sala" id="button" value="Cadastrar"/></center></td>
                                 </tr>
                             </table>
                         </form>
@@ -332,27 +338,10 @@
                         <?php @$i++; } ?>
                     </table>   
                 <?php die; }?>
-
-                <?php if (@$_GET['area'] == 'datashow') { ?>                                            
-                    <?php if (@$_GET['cadastra'] == 'sim') { ?>
-                        <?php if (isset($_POST['cadastra_reserva'])) {
-
-                            $id_prof_post = $_POST['professor']; 
-                            $id_sala_post = $_POST['sala']; 
-                            $data_reserva_post = $_POST['data_reserva']; 
-                            $obs_post = $_POST['obs'];
-
-                            $insert_reserva = $crud->insert('reserva', 'id_sala, id_professor, data_reserva, obs', '(?, ?, ?, ?)')
-                                                   ->run([$id_sala_post, $id_prof_post, $data_reserva_post, $obs_post]);
-
-                            if ($insert_reserva->rowCount() <= 0) {
-                                echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
-                            } else {
-                                echo "<script language='javascript'>                                                                                                                                    window.alert('Cadastro Realizado com sucesso!');
-                                         window.location='novidades.php?pg=data';
-                                      </script>";
-                            }
-                        } ?>
+        <!Parte do Data Show Referente a Reserva>
+                <?php if (@$_GET['area'] == 'datashow') { ?>   
+        <!Parte para novo cadastro de reserva>
+                    <?php if (@$_GET['cadastra'] == 'sim') { ?>                        
                         <form method="post" border="0px" width="900px">
                             <table>
                                 <tr>
@@ -401,12 +390,181 @@
                                 </tr>
                             </table>                                    
                         </form>
-                    <?php die; } ?>
-                <?php } ?>
+                        <?php if (isset($_POST['cadastra_reserva'])) {
 
+                            $id_prof_post = $_POST['professor']; 
+                            $id_sala_post = $_POST['sala']; 
+                            $data_reserva_post = $_POST['data_reserva']; 
+                            $obs_post = $_POST['obs'];
+
+                            $insert_reserva = $crud->insert('reserva', 'id_sala, id_professor, data_reserva, obs', '(?, ?, ?, ?)')
+                                                   ->run([$id_sala_post, $id_prof_post, $data_reserva_post, $obs_post]);
+
+                            if ($insert_reserva->rowCount() <= 0) {
+                                echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
+                            } else {
+                                echo "<script language='javascript'>window.alert('Cadastro Realizado com sucesso!');window.location='novidades.php?pg=data';</script>";
+                            }
+                        } ?>
+                    <?php die; } ?>
+        <!Visualização / Edição de Reservas>
+                    <?php if (@$_GET['op'] == 'more') { ?> 
+                        <?php if (@$_GET['func'] == 'del') {
+                            $id_reserva = @$_GET['reserva'];
+                            $deleta_reserva = $crud->delete('reserva', 'WHERE id_reserva = ?')->run([$id_reserva]);
+                            if ($deleta_reserva->rowCount() > 0) {
+                                 echo '<script language="javascript">window.location="novidades.php?pg=data&area=datashow";</script>';                                
+                            }else{
+                                echo 'Algum Erro :(';
+                            }
+                        }?>
+                        <?php if (@$_GET['func'] == 'alt') {
+                            @$disabled = '';
+                        } else {
+                            @$disabled = 'disabled';
+                        }
+                        $id_reserva = $_GET['reserva'];
+                        $seleciona_reserva = $crud->select('sv.identificador, sv.id_sala, p.nome_professor, p.id_professor, r.data_reserva, r.obs', 'reserva r', 'INNER JOIN professor p ON p.id_professor = r.id_professor INNER JOIN sala_video sv ON sv.id_sala = r.id_sala WHERE r.id_reserva = ?')->run([$id_reserva]);
+                        $valores_reserva = $seleciona_reserva->fetch(PDO::FETCH_ASSOC); 
+                        $nome_professor = $valores_reserva['nome_professor'];
+                        $nome_sala = $valores_reserva['identificador'];
+                        
+                        if (@!$_GET['func'] == 'alt') { ?>
+                            <center>
+                                <a class="a2" href="novidades.php?pg=data&area=datashow&op=more&reserva=<?php echo $id_reserva; ?>&func=alt">Atualizar</a>
+                                <a class="a2" href="novidades.php?pg=data&area=datashow&op=more&reserva=<?php echo $id_reserva; ?>&func=del">Excluir</a>                
+                            </center>
+                        <br/><br/>
+                        <?php } ?>
+                        <form method="POST">
+                            <table width="900px"  border="0px" >
+                                <tr>
+                                    <td colspan="2"><center>Atualizar Reserva</center></td>
+                                </tr>
+                                <tr>
+                                    <td>Professor</td>
+                                    <td>Sala</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <?php if (@$_GET['func'] == 'alt') { ?>
+                                        <select name="professor">
+                                            <option value="<?php echo $valores_reserva['id_professor'];?>"><?php echo $nome_professor; ?></option>
+                                            <?php  $sel_prof = $crud->select('id_professor, nome_professor', 'professor', 'WHERE id_professor IS NOT NULL AND nome_professor <> ? ORDER BY nome_professor')->run([$nome_professor]);
+                                            while ($val_prof = $sel_prof->fetch(PDO::FETCH_ASSOC)){
+                                                $id_professor = $val_prof['id_professor'];
+                                                $nome_professor = $val_prof['nome_professor'];
+                                                echo "<option value='$id_professor'>$nome_professor</option>"; 
+                                            } ?>
+                                        </select>
+                                        <?php } else { ?>
+                                            <input type="text" <?php echo $disabled;?> value="<?php echo $valores_reserva['nome_professor']; ?>" />
+                                        <?php } ?>
+                                    </td>
+                                    <td>
+                                        <?php if (@$_GET['func'] == 'alt') { ?>
+                                        <select name="sala">
+                                            <option value="<?php echo $valores_reserva['id_sala'];?>"><?php echo $nome_sala;?></option>
+                                            <?php $sel_sala = $crud->select('id_sala, identificador', 'sala_video', 'WHERE id_sala IS NOT NULL AND identificador <> ? ORDER BY identificador')->run([$nome_sala]);
+                                            while ($val_sala = $sel_sala->fetch(PDO::FETCH_ASSOC)){
+                                                $id_sala = $val_sala['id_sala'];
+                                                $nome_sala = $val_sala['identificador'];
+                                                echo "<option value='$id_sala'>$nome_sala</option>"; 
+                                            }?>
+                                        </select>
+                                        <?php } else { ?>
+                                            <input type="text" value="<?php echo $valores_reserva['identificador']; ?>" <?php echo $disabled;?> />
+                                        <?php } ?>
+                                    </td>
+                                </tr>                                            
+                                <tr>
+                                    <td>Data</td>
+                                    <td>Observação</td> 
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <?php if (@$_GET['func'] == 'alt') { ?>
+                                            <input name="data_reserva" type="date" <?php echo $disabled;?> value="<?php echo $valores_reserva['data_reserva']; ?>"/>
+                                        <?php } else { ?> 
+                                            <input type="date" <?php echo $disabled;?> value="<?php echo $valores_reserva['data_reserva']; ?>"/>
+                                        <?php } ?>
+                                    </td>
+                                    <td>
+                                        <?php if (@$_GET['func'] == 'alt') { ?>
+                                            <textarea name="obs" rows="3" cols="40" maxlength="120" <?php echo $disabled;?> ><?php echo $valores_reserva['obs']; ?></textarea>
+                                        <?php } else { ?> 
+                                            <textarea name="obs" rows="3" cols="40" maxlength="120" <?php echo $disabled;?> ><?php echo $valores_reserva['obs']; ?></textarea>
+                                        <?php } ?>                                                                                
+                                    </td>
+                                </tr>
+                                <?php if (@$_GET['func'] == 'alt') { ?>
+                                    <tr>
+                                        <td colspan="2">
+                                            <center>
+                                                <input class="input" id="button" name="alterar_reserva" value="Concluir" type="submit"/>
+                                                <input class="input" id="button" name="cancelar" value="Cancelar" type="submit"/>
+                                            </center>
+                                        </td>
+                                    </tr>                                    
+                                <?php } else {} ?>                                
+                            </table>                                    
+                        </form>
+                        <?php if (isset($_POST['alterar_reserva'])) {
+
+                            $id_prof_post = $_POST['professor']; 
+                            $id_sala_post = $_POST['sala']; 
+                            $data_reserva_post = $_POST['data_reserva']; 
+                            $obs_post = $_POST['obs'];
+                            
+                            if (($valores_reserva['id_professor'] != $id_prof_post) || ($valores_reserva['id_sala'] != $id_sala_post) || ($valores_reserva['data_reserva'] != $data_reserva_post) || ($valores_reserva['obs'] != $obs_post)) {
+                                
+                                $update_reserva = $crud->update('reserva', 'id_sala = :sala, id_professor = :prof, data_reserva = :dt, obs = :obs', 'WHERE id_reserva = :id')->run([':id' => $id_reserva, ':sala' => $id_sala_post, ':prof' => $id_prof_post, ':dt' => $data_reserva_post, ':obs' => $obs_post]);
+                                
+                                if ($update_reserva->rowCount() > 0) {                                   
+                                    echo "<script language='javascript'>window.alert('Reserva atualizada com sucesso!');window.location='novidades.php?pg=data&area=datashow&op=more&reserva=$id_reserva';</script>";
+                                } else {
+                                    echo "<script language='javascript'>window.alert('Erro Desconhecido!');</script>";
+                                }
+                                
+                            } else {
+                                echo "<script language='javascript'>window.alert('Nenhuma modificação foi feita!');window.location='novidades.php?pg=data&area=datashow&op=more&reserva=$id_reserva';</script>";
+                            }
+                        } else if (isset ($_POST['cancelar'])) {
+                            echo '<script language="javascript">window.location="novidades.php?pg=data&area=datashow&op=more&reserva='.$id_reserva.'";</script>';
+                        } ?>
+                    <?php die; } ?>
+            <!Mostrando Todas as Reservas já cadastradas>
+                    <a class="a2" href="novidades.php?pg=data&area=datashow&cadastra=sim">Fazer nova reserva</a>
+                    <br/><br/>
+                    <table border="0" width="900" class="bordasimples">
+                        <thead>
+                            <th><center><i><b>Sala</b></i></center></th>
+                            <th><center><i><b>Professor</b></i></center></th>
+                            <th><center><i><b>Data da Reserva</b></i></center></th>
+                            <th><center><i><b>Obs</b></i></center></th>                    
+                        </thead>
+                        <?php 
+                        $select_todos_reserva = $crud->select('r.id_reserva, sv.identificador, p.nome_professor, r.data_reserva, r.obs', 'reserva r', 'INNER JOIN professor p ON p.id_professor = r.id_professor INNER JOIN sala_video sv ON sv.id_sala = r.id_sala WHERE r.id_sala IS NOT NULL AND r.id_professor IS NOT NULL ORDER BY r.data_reserva, p.nome_professor, sv.identificador')->run();                                                       
+                        while ($valores_reserva = $select_todos_reserva->fetch(PDO::FETCH_ASSOC)){
+                            $class = @$i % 2 == 0 ? ' class="dif"' : '';
+                            $id_reserva = $valores_reserva['id_reserva'];
+                            $nome_sala = $valores_reserva['identificador'];
+                            $nome_professor = $valores_reserva['nome_professor'];
+                            $data_reserva = date('d/m/Y', strtotime($valores_reserva['data_reserva']));
+                            $obs = $valores_reserva['obs']; ?>
+                            <tr <?php echo $class; ?> onclick="location.href='novidades.php?pg=data&area=datashow&op=more&reserva=<?php echo $id_reserva;?>'">
+                                <td><?php echo $nome_sala;?></td>
+                                <td><?php echo $nome_professor;?></td>
+                                <td><?php echo $data_reserva;?></td>
+                                <td><?php echo substr($obs, 0, 20);?></td>
+                            </tr>                                                                        
+                        <?php @$i++; } ?>                                              
+                    </table>
+                <?php die; } ?>
+        <!Mostrando Proximas reservas até 1 mês>
                 <center>
-                    <a class="a2" href = "novidades.php?pg=data&area=datashow&cadastra=sim">Reservas</a>
-                    <a class="a2" href = "novidades.php?pg=data&area=video">Sala de Vídeo</a>
+                    <a class="a2" href="novidades.php?pg=data&area=datashow">Reservas</a>
+                    <a class="a2" href="novidades.php?pg=data&area=video">Sala de Vídeo</a>
                 </center>
                 <br/>
                 <center><i><b><h1>Proximas Reservas</h1></b></i></center>
@@ -454,8 +612,8 @@
                         <td><center><a href="novidades.php?pg=plano&act=more&plano=<?php echo $id_plano; ?>"><?php echo $titulo; ?></a></center></td>
                     </tr>-->					
                 <?php } */ ?>
-                </table>
-                <br/> 
+                <!--</table>
+                <br/>--> 
            <?php die; } ?>		
 	</div>
 </body>
