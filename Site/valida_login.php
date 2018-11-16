@@ -12,12 +12,8 @@ if (empty($login)) {
 } else if (empty($senha)) {
     $erro = "Por favor, digite sua senha!";
 } else {
-
     $senha = md5($senha);
-
-    $select = $crud->select('COUNT(*) quantidade, tipo_usuario tipo, status_login', 'login', 'WHERE nome_usuario = :login AND senha = :senha')
-            ->run([':login' => $login, ':senha' => $senha]);
-
+    $select = $crud->select('COUNT(*) quantidade, tipo_usuario tipo, status_login', 'login', 'WHERE nome_usuario = :login AND senha = :senha')->run([':login' => $login, ':senha' => $senha]);
     $valores = $select->fetch(PDO::FETCH_ASSOC);
 
     if ($valores['quantidade'] == 1) {
@@ -30,51 +26,20 @@ if (empty($login)) {
 }
 if ($erro) {
     header("location:login.php?erro=$erro");
-} else {
-    //session_start();
-    header("location:admin/index.php");
+} else {    
+    @session_start();
+    $_SESSION['cpf'] = $login;
+    $_SESSION['tipo_usuario'] = $valores['tipo'];
+    $select_id_professor = $crud->select('p.id_professor', 'professor p', 'WHERE p.cpf = ?')->run([$login]);
+    $val = $select_id_professor->fetch(PDO::FETCH_ASSOC);
+    $_SESSION['cod_professor'] = $val['id_professor'];
 
-//if ($valores['tipo'] == 'ADMINISTRADOR') {
-//    echo 'Você está logado com uma conta administrador';
-//} else {
-//    echo 'Você está logado com uma conta professor';
-//}
-//    $consulta_login = "SELECT * FROM login WHERE nome_usuario = '$login' AND senha = '$password'";
-//    $resultado_consulta_login = mysqli_query($conexao, $consulta_login);
-//
-//    if (mysqli_num_rows($resultado_consulta_login) > 0) {
-//        while ($resultado_consulta_login_1 = mysqli_fetch_assoc($resultado_consulta_login)) {
-//            $tipo_usuario = $resultado_consulta_login_1['tipo_usuario'];
-//
-//            if ($tipo_usuario == 'PROFESSOR') {
-//                echo "<h2> Você não tem acesso a essa Pagina!! </h2>";
-//            } else {
-//                session_start();
-//
-//                $_SESSION['tipo_usuario'] = $tipo_usuario;
-//
-//                echo "<script language='javascript'> window.location='admin/fazer_chamada.php?pg=chamada'; </script>";
-//            }
-//        }
-//    } else {
-//        echo "<h2> Dados incorretos! </h2>";
-//    }
-//
-//$select = $crud->select('*', 'produtos')->run();
-//
-//while ($result = $select->fetch(PDO::FETCH_ASSOC)){
-//    var_dump($result);
-//    echo 'Preço'.$result['preco'];
-//}
-//
-//var_dump($result);
-//
-////print("PDO::FETCH_BOTH: ");
-////print("Return next row as an array indexed by both column name and number\n");
-//$result = $select->fetch(PDO::FETCH_BOTH);
-////print_r($result);
-//
-//
-//var_dump($result);
+    if ($_SESSION['tipo_usuario'] == 'ADMINISTRADOR') {
+        header("location:admin/index.php");
+    } else if ($_SESSION['tipo_usuario'] == 'DATASHOW') {
+        header("location:datashow/index.php");
+    } else {
+        header("location:professor/index.php");
+    }
 }
      

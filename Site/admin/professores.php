@@ -496,6 +496,9 @@
                     $formacao_professor = $_POST['formacao_professor'];
 
                     $insert_professor = $crud->insert('professor', 'data_nascimento_professor, nome_professor, sexo_professor, cpf, rg_professor, rua_professor, numero_professor, bairro_professor, cidade_professor, complemento_professor, cep_professor, telefone_professor, celular_professor, email, formacao', '(:dt_nasc, :nome, :sexo, :cpf, :rg, :rua, :num, :bairro,  :cidade, :comp, :cep, :tel, :cel, :email, :formacao')->run([':dt_nasc' => $data_nascimento_professor, ':nome' => $nome_professor, ':sexo' => $sexo_professor, ':cpf' => $cpf_professor, ':rg' => $rg_professor, ':rua' => $rua_professor, ':num' => $numero_professor, ':bairro' => $bairro_professor, ':cidade' => $cidade_professor, ':comp' => $complemento_professor, ':cep' => $cep_professor, ':tel' => $telefone_professor, ':cel' => $celular_professor, ':email' => $email_professor, ':formacao' => $formacao_professor]);
+                    $senha_data = date('dmY', strtotime($data_nascimento_professor));
+                    md5($senha_data);
+                    $crud->insert('login', 'nome_usuario, senha', '(?, ?)')->run([$cpf_professor, $senha_data]);                    
 
                     if ($insert_professor->rowCount() <= 0) {
                         echo "<script language='javascript'>window.alert('Ocorreu um erro ao cadastrar o professor!');</script>";
