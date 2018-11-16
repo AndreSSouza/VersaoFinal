@@ -31,9 +31,19 @@ require '../class/config.class.php';
         </div>         
         <div id="box_menu">
             <div id="menu_topo">
-                <ul>   				
-                    <li><a href="fazer_chamada.php">CHAMADA</a></li>   				
-                    <li><a href="cursos_e_disciplinas.php?pg=turma">TURMAS</a></li>
+                <ul>
+                    <li>
+                        <a href="#">ESTUDANTES</a>
+                        <ul>
+                            <li>
+                                <a href="estudantes.php?pg=espera">Lista Espera</a>
+                            </li>
+                            <li>
+                                <a href="estudantes.php?pg=aluno">Alunos</a>
+                            </li>						
+                        </ul>
+                    </li>                      
+                    <li><a href="turma.php?pg=turma">TURMAS</a></li>
                     <li>
                         <a href="#">PROFESSORES</a>
                         <ul>
@@ -47,29 +57,7 @@ require '../class/config.class.php';
                                 <a href="professores.php?pg=disciplinas_ministradas">Professores & Disciplinas</a>
                             </li>
                         </ul>
-                    </li>   				
-                    <li>
-                        <a href="#">ESTUDANTES</a>
-                        <ul>
-                            <li>
-                                <a href="estudantes.php?pg=espera">Lista Espera</a>
-                            </li>
-                            <li>
-                                <a href="estudantes.php?pg=aluno">Alunos</a>
-                            </li>						
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">*</a>
-                        <ul>
-                            <li>
-                                <a href="novidades.php?pg=plano">Plano de Aula</a>
-                            </li>
-                            <li>
-                                <a href="novidades.php?pg=data">Data Show</a>
-                            </li>						
-                        </ul>
-                    </li>
+                    </li>   				                                      
                 </ul>
             </div>
         </div>

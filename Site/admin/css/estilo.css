@@ -30,17 +30,22 @@ table.bordasimples tr th {
     padding: 20px 0px;
 }
 #box_curso .a2{
-    font:13px Arial, Helvetica, sans-serif;
-    margin:30px 0 10px 37px;
-    color:#FFF;
-    background:#f60;
-    text-decoration:none;
-    padding:10px;
-    border:1px solid #000;
+    font:15px Arial, Helvetica, sans-serif;
+    width: auto;
+    background: #3db35c;
+    color: #FFF;
+    cursor: pointer;
+    border: 0px;
+    border-radius: 3%;
+    text-decoration: none;
+    padding-right: 17px;
+    padding-left: 17px;
+    padding-top: 8px;
+    padding-bottom: 9px;
+    text-align: center;
 }
 #box_curso .a2:hover{
-    border:1px solid #0FF;
-    background:#f60;
+    background: forestgreen;
 }
 #box_curso h1{
     text-align: center;

@@ -98,7 +98,7 @@
                         if (($nome_turma != $nome_turma_post) || ($quantidade_alunos != $quantidade_alunos_post)) {
 
                             $update_turma = $crud->update('turma', 'nome_turma = :nome, quantidade_alunos = :qtde', 'WHERE id_turma = :id_turma')->run([':nome' => $nome_turma_post, ':qtde' => $quantidade_alunos_post, ':id_turma' => $cod_turma]);
-                            echo "<script language='javascript'> window.alert('Turma atualizada com Sucesso'); window.location='cursos_e_disciplinas.php?pg=turma';</script>";
+                            echo "<script language='javascript'> window.alert('Turma atualizada com Sucesso'); window.location='turma.php?pg=turma';</script>";
                         }
                     }
                     ?>
@@ -128,7 +128,7 @@
                                     <input type="number" name="qtde_alunos" id="textfield" min="1" value="<?php echo $quantidade_alunos; ?>">
                                 </td>
                             <tr>
-                                <td><center><input class="input" type="submit" name="salvar" value="Salvar"/> <a class="a2" href="cursos_e_disciplinas.php?pg=turma">Cancelar</a></center></td>
+                                <td><center><input class="input" type="submit" name="salvar" value="Salvar"/> <a class="a2" href="turma.php?pg=turma">Cancelar</a></center></td>
                             </tr>
                         </table>
                     </form>
@@ -164,7 +164,7 @@
                             echo "<script language='javascript'> window.alert('Erro ao Cadastrar, Turma já Cadastrada!');</script>";
                         } else {
                             echo "<script language='javascript'> window.alert('Cadastro Realizado com sucesso!!');</script>";
-                            echo "<script language='javascript'>window.location='cursos_e_disciplinas.php?pg=turma';</script>";
+                            echo "<script language='javascript'>window.location='turma.php?pg=turma';</script>";
                         }
                     }
                     ?>
@@ -205,7 +205,7 @@
 
                 <!VISUALIZAR AS TURMAS CADASTRADAS>
                 <br/> 
-                <a class="a2" title="Cadastrar uma turma" href="cursos_e_disciplinas.php?pg=turma&amp;cadastra=sim">Cadastrar turma</a>
+                <a class="a2" title="Cadastrar uma turma" href="turma.php?pg=turma&amp;cadastra=sim">Cadastrar turma</a>
 
                 <?php
                 $select_turma = $crud->select('id_turma, nome_turma, quantidade_alunos, disponivel', 'turma', 'ORDER BY nome_turma')->run();
@@ -239,9 +239,9 @@
                                 <td><center><?php echo $select_count_turma->rowCount() . ' | ' . $qtde_alunos; ?></center></td>
                                 <td>
                                     <center>
-                                        <a href="cursos_e_disciplinas.php?pg=turma&amp;op=visualizar&turma=<?php echo $cod_turma; ?>" ><img title="Visualizar Turma <?php echo $nome_turma; ?>" src="img/lupa_turma.png" width="18" height="18" border="0"/></a>
-                                        <a href="cursos_e_disciplinas.php?pg=turma&amp;op=atualizar&turma=<?php echo $cod_turma; ?>"><img title="Atualizar Turma <?php echo $nome_turma; ?>" src="img/editar.png" width="18" height="18" border="0"/></a>
-                                        <a href="cursos_e_disciplinas.php?pg=turma&amp;op=deletar&turma=<?php echo $cod_turma; ?>"><img title="Deletar Turma <?php echo $nome_turma; ?>" src="img/deletar.ico" width="18" height="18" border="0"/></a>
+                                        <a href="turma.php?pg=turma&amp;op=visualizar&turma=<?php echo $cod_turma; ?>" ><img title="Visualizar Turma <?php echo $nome_turma; ?>" src="img/lupa_turma.png" width="18" height="18" border="0"/></a>
+                                        <a href="turma.php?pg=turma&amp;op=atualizar&turma=<?php echo $cod_turma; ?>"><img title="Atualizar Turma <?php echo $nome_turma; ?>" src="img/editar.png" width="18" height="18" border="0"/></a>
+                                        <a href="turma.php?pg=turma&amp;op=deletar&turma=<?php echo $cod_turma; ?>"><img title="Deletar Turma <?php echo $nome_turma; ?>" src="img/deletar.ico" width="18" height="18" border="0"/></a>
                                     </center>
                                 </td>
                             </tr>

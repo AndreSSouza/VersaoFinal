@@ -1,2 +1,3 @@
 <?php
-require "topo.php";
+
+header('Location: estudantes.php?pg=espera');
