@@ -14,53 +14,11 @@ if (@$usuario_atual) {
     }
 }
 
-/*	require "conexao.php";
-	
-		@session_start();
-		$_SESSION['nome_usuario'] = $nome_usuario;
-		$_SESSION['nome_completo'] = $nome_completo;
-		$_SESSION['senha'] = $senha;
-		$_SESSION['tipo_usuario'] = $tipo_usuario;
-	
-		if($nome_usuario == '')
-		{
-			echo "<script language='javascript'>window.location='../index.php';</script>";	
-		}
-		else if($nome_completo == '')
-		{
-			echo "<script language='javascript'>window.location='../index.php';</script>";	
-		}
-		else if($senha == '')
-		{
-			echo "<script language='javascript'>window.location='../index.php';</script>";
-		}
-		else if($usuario_atual != $tipo_usuario)
-		{
-			echo "<script language='javascript'>window.location='../index.php';</script>";
-		} */
-	
+if (@$_GET['pg'] == 'sair') {
+    session_destroy();
+    $_SESSION['cpf'];
+    $_SESSION['tipo_usuario'];       
+    $_SESSION['cod_professor'];
 
-//@session_start();
-//$tipo_usuario = @$_SESSION['tipo_usuario'];
-//
-//if (($tipo_usuario == 'PROFESSOR') || ($tipo_usuario == 'ADMINISTRADOR')) {
-//    
-//    echo $tipo_usuario . '</br></br>';    
-//    $_SESSION['nome_usuario'];
-//    @$_SESSION['vazia'];
-//    
-//    echo $retorno = is_null(@$_SESSION['vazia']) ? 'Session "vazia" é NULL' : 'Session "Vazia" não é NULL';
-//    
-//} else {
-//    echo $tipo_usuario;
-//    //header("location:index.php");
-//}
-
-//    echo "<script language='javascript'>window.location='../index.php';</script>";
-//} else if ($nome_completo == '') {
-//    echo "<script language='javascript'>window.location='../index.php';</script>";
-//} else if ($senha == '') {
-//    echo "<script language='javascript'>window.location='../index.php';</script>";
-//} else if ($usuario_atual != $tipo_usuario) {
-//    echo "<script language='javascript'>window.location='../index.php';</script>";
-//}
+    header("location:../index.php");
+}	

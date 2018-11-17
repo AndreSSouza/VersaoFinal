@@ -27,7 +27,7 @@ require '../class/config.class.php';
     </head>
     <body bgcolor="#000">        
         <div id="logo">
-            <img src="../img/logoEtec.png" width="100px" height="144px" style="background-color: #2c82ce;"/>
+            <a href="estudantes.php?pg=espera"><img src="../img/logoEtec.png" width="100px" height="144px" style="background-color: #2c82ce;"/></a>
         </div>         
         <div id="box_menu">
             <div id="menu_topo">
@@ -57,7 +57,10 @@ require '../class/config.class.php';
                                 <a href="professores.php?pg=disciplinas_ministradas">Professores & Disciplinas</a>
                             </li>
                         </ul>
-                    </li>   				                                      
+                    </li>
+                    <li>
+                        <a href="topo.php?pg=sair" style="background-color: red; padding: 10px 15px 10px 15px; color: #FFF; margin: 7px 0px 0px 140px;">X</a>
+                    </li>                    
                 </ul>
             </div>
         </div>

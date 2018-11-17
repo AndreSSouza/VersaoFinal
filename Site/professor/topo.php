@@ -34,7 +34,8 @@ require '../class/config.class.php';
                 <ul>   				
                     <li><a href="chamada.php">CHAMADA</a></li>   				
                     <li><a href="plano_aula.php">Plano de Aula</a></li>
-                    <li><a href="#">Conta</a></li>                    
+                    <li><a href="#">Conta</a></li> 
+                    <li><a href="topo.php?pg=sair" style="background-color: red; padding: 10px 15px 10px 15px; color: #FFF; margin: 7px 0px 0px 210px;">X</a></li>
                 </ul>
             </div>
         </div>

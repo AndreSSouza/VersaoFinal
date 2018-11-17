@@ -33,7 +33,8 @@ require '../class/config.class.php';
             <div id="menu_topo">
                 <ul>  				
                     <li><a href="data_show.php">Data Show</a></li>
-                    <li><a href="#">Conta</a></li>                    
+                    <li><a href="#">Conta</a></li>
+                    <li><a href="topo.php?pg=sair" style="background-color: red; padding: 10px 15px 10px 15px; color: #FFF; margin: 7px 0px 0px 380px;">X</a></li>
                 </ul>
             </div>
         </div>
