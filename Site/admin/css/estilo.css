@@ -109,3 +109,9 @@ table.bordasimples tr th {
 #box_curso .input:hover{
     background: forestgreen;
 }
+
+#box_curso .buttons_cadastra {
+    width: -webkit-fill-available;
+    background-color: #2C82CE;
+    border: 0px;
+}

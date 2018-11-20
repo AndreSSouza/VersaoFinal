@@ -16,14 +16,17 @@
 
                 <?php if (@$_GET['op'] == 'visualizar') { ?>
 
-                    <?php
-                    $cod_turma = $_GET['turma'];
+                    <?php $cod_turma = $_GET['turma'];
                     $select_turma = $crud->select('id_turma, nome_turma, quantidade_alunos, disponivel', 'turma', 'WHERE id_turma = ?')->run([$cod_turma]);
                     $valores_turma = $select_turma->fetch(PDO::FETCH_ASSOC);
                     $nome_turma = $valores_turma['nome_turma'];
                     $quantidade_alunos = $valores_turma['quantidade_alunos'];
-                    $disponivel = $valores_turma['disponivel'];
-                    ?>
+                    $disponivel = $valores_turma['disponivel']; 
+                    
+                    if (@$_GET['del'] == 'sim') {
+                        $id_aluno = @$_GET['aluno'];
+                        $crud->update('aluno', 'status_aluno = 0', 'WHERE id_aluno = ?')->run([$id_aluno]);
+                    } ?>
 
                     <br/>
                     <table width="900">
@@ -49,25 +52,34 @@
 
                     <table width="900" border="0">
                         <tr>
-                            <td width="710"><strong>Nome do aluno</strong></td>
+                            <td><strong>Nome do aluno</strong></td>
+                            <td style="width: auto"></td>
                             <td><strong>Quantidade de faltas</strong></td>
                         </tr>
                         <?php
-                        $select = $crud->select('i.nome_aluno AS nome, a.id_aluno AS id_aluno', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno INNER JOIN turma t ON t.id_turma = a.id_turma WHERE t.id_turma = ?')->run([$cod_turma]);
-                        while ($values_select = $select->fetch(PDO::FETCH_ASSOC)) {
-                            ?>
-                            <tr>
-                                <td width="710"><?php echo $values_select['nome']; ?></td>
-                                <td>
-                                    <center>
-                                        <?php
-                                        $cod_aluno = $values_select['id_aluno'];
-                                        $select_faltas = $crud->select('COUNT(presenca) AS faltas', 'chamada', 'WHERE id_aluno = ? AND presenca = 0')->run([$cod_aluno]);
-                                        $val_total_faltas = $select_faltas->fetch(PDO::FETCH_ASSOC);
-                                        echo $val_total_faltas['faltas'];
-                                        ?>
-                                    </center>
-                                </td>
+                        $select = $crud->select('i.nome_aluno AS nome, a.id_aluno AS id_aluno', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno INNER JOIN turma t ON t.id_turma = a.id_turma WHERE t.id_turma = ? AND a.status_aluno = 1')->run([$cod_turma]);
+                        while ($values_select = $select->fetch(PDO::FETCH_ASSOC)){ 
+                                
+                            $cod_aluno = $values_select['id_aluno'];
+                            $select_faltas = $crud->select('COUNT(presenca) AS faltas', 'chamada', 'WHERE id_aluno = ? AND presenca = 0')->run([$cod_aluno]);
+                            $val_total_faltas = $select_faltas->fetch(PDO::FETCH_ASSOC);
+                            $faltas = $val_total_faltas['faltas'];
+                            
+                            if ($faltas <= 1){
+                                $color = 'green';
+                            }elseif ($faltas == 2){
+                                $color = 'yellow';
+                            }else{
+                                $color = 'red';
+                            } ?>
+                            <tr height='30px'>
+                                <td style="background-color: <?php echo @$color;?>; width: 685px;" ><?php echo $values_select['nome']; ?></td>
+                                <?php if ($faltas == 3) {
+                                    echo '<td><a href="turma.php?pg=turma&op=visualizar&turma=9&aluno='.$cod_aluno.'&del=sim"><img width="30px" src="img/x.svg"</a></td>';
+                                } else {                                                                  
+                                    echo '<td></td>';
+                                } ?>
+                                <td><center><?php echo $faltas; ?></center></td>
                             </tr>
                         <?php } ?>
                     </table>
@@ -204,8 +216,7 @@
                 ?>
 
                 <!VISUALIZAR AS TURMAS CADASTRADAS>
-                <br/> 
-                <a class="a2" title="Cadastrar uma turma" href="turma.php?pg=turma&amp;cadastra=sim">Cadastrar turma</a>
+                <table class="buttons_cadastra"><tr><td><a class="a2" title="Cadastrar uma turma" href="turma.php?pg=turma&amp;cadastra=sim">Cadastrar turma</a></td></tr></table>
 
                 <?php
                 $select_turma = $crud->select('id_turma, nome_turma, quantidade_alunos, disponivel', 'turma', 'ORDER BY nome_turma')->run();
@@ -232,7 +243,7 @@
                             $nome_turma = $valores_turma['nome_turma'];
                             $qtde_alunos = $valores_turma['quantidade_alunos'];
                             $cod_turma = $valores_turma['id_turma'];
-                            $select_count_turma = $crud->select('id_aluno', 'aluno', 'WHERE id_turma = ?')->run([$cod_turma]);
+                            $select_count_turma = $crud->select('id_aluno', 'aluno', 'WHERE id_turma = ? AND status_aluno = 1')->run([$cod_turma]);
                             ?>
                             <tr <?php echo $class; ?>>
                                 <td><center><?php echo $nome_turma; ?></center></td>

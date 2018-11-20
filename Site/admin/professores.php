@@ -404,8 +404,6 @@
 
                     @$val = (@$_GET['func'] == 'ativa') ? 1 : 0;
 
-                    //$muda_status_prof = "UPDATE professor SET status_professor = 0 WHERE id_professor = '$cod_professor' ";
-
                     $update_troca_status = $crud->update('professor', 'status_professor = ?', 'WHERE id_professor = ?')->run([$val, $cod_professor]);
 
                     echo "<script language='javascript'> window.alert('Status do(a) Professor(a) foi modificado(a) com sucesso'); window.location='professores.php?pg=professor';</script>";
@@ -413,11 +411,12 @@
                 ?>			
                 <!>
 
-                <a class="a2" title="Cadastrar os professores" href="professores.php?pg=cadastra_professor">Cadastrar Professor</a>
+                <table class="buttons_cadastra"><tr><td><a class="a2" title="Cadastrar os professores" href="professores.php?pg=cadastra_professor">Cadastrar Professor</a></td></tr></table>
 
                 <!VISUALIZAR OS PROFESSORES CADASTRADOS>
 
                 <h1>Professores</h1>
+                <br/>
 
                 <?php
                 $select_professor = $crud->select('*', 'professor', 'WHERE nome_professor IS NOT NULL')->run();
@@ -443,7 +442,7 @@
                             $nome_professor = $resultado_consulta_select_professor['nome_professor'];
                             $cpf_professor = $resultado_consulta_select_professor['cpf'];
                             $email_professor = $resultado_consulta_select_professor['email'];
-                            //$status_professor = $resultado_consulta_select_professor['status_professor'];
+                            $status_professor = $resultado_consulta_select_professor['status_professor'];
                             ?>
                             <tr <?php echo $class; ?>>                                
                                 <td><?php echo $cod_professor; ?></td>
@@ -453,11 +452,11 @@
                                 <td style="color: #A00C0E">								
                                     <a href="professores.php?pg=professor&amp;op=visualizar&professor=<?php echo $cod_professor; ?>" ><img title="Visualizar o Professor <?php echo $nome_professor; ?>" src="img/lupa_turma.png" width="18" height="18" border="0"/></a>
                                     <a href="professores.php?pg=professor&amp;op=atualizar&professor=<?php echo $cod_professor; ?>"><img title="Atualizar o Professor <?php echo $nome_professor; ?>" src="img/editar.png" width="18" height="18" border="0"/></a>
-                                    <?php // if($status_professor == 0){      ?>
-                                            <!--<a href="professores.php?pg=professor&amp;op=trocaStatus&func=ativa&professor=<?php echo $cod_professor; ?>"><img title="Ativar o Professor <?php echo $nome_professor; ?>" src="img/success.png" width="18" height="18" border="0"></a> -->
-                                    <?php //} else {      ?>
+                                    <?php if($status_professor == 0){ ?>
+                                            <a href="professores.php?pg=professor&amp;op=trocaStatus&func=ativa&professor=<?php echo $cod_professor; ?>"><img title="Ativar o Professor <?php echo $nome_professor; ?>" src="img/success.png" width="18" height="18" border="0"></a>
+                                    <?php } else { ?>
                                     <a href="professores.php?pg=professor&amp;op=trocaStatus&func=inativa&professor=<?php echo $cod_professor; ?>"><img title="Inativar o Professor <?php echo $nome_professor; ?>" src="img/error.png" width="18" height="18" border="0"/></a>						
-                                    <?php //}   ?>	
+                                    <?php } ?>	
                                 </td>                                
                             </tr>
                             <?php
@@ -750,8 +749,8 @@
                                             ?>
 
                                             <!VISUALIZAR AS MATERIAS CADASTRADAS>
+                                            <table class="buttons_cadastra"><tr><td><a class="a2" href="professores.php?pg=cadastra_materia">Cadastrar Materia</a></td></tr></table>
                                             
-                                            <a class="a2" href="professores.php?pg=cadastra_materia">Cadastrar Materia</a>
 
                                             <?php
                                             $select_materia = $crud->select('*', 'disciplina')->run();

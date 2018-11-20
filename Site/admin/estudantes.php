@@ -5,6 +5,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Estudantes</title>       
         <link rel="stylesheet" type="text/css" href="css/estilo.css" />
+        <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.quicksearch/2.3.1/jquery.quicksearch.js"></script>  
         <script>
             function mostra_nome_aluno(str) {
                 var xmlhttp = new XMLHttpRequest();
@@ -44,8 +46,8 @@
                     $telefone_inscricao = $val_select_inscricao['telefone_contato'];
                     $celular_inscricao = $val_select_inscricao['celular_contato'];
                     ?>
-
-                    <br/>									
+                    
+                    <br/>
                     <table>
                         <tr>
                             <td colspan="2"><center><strong><i>Ficha de Inscrição</i></i></strong></center></td>
@@ -80,8 +82,11 @@
                         <tr>						
                             <td><input style="width:400px" type="email" name="email" value="<?php echo $email_inscricao; ?>" disabled></td>
                             <td><input style="width:95px" type="text" name="telefone" maxlength="10" value="<?php echo $telefone_inscricao; ?> " disabled></td>
-                            <td><input style="width:105px" type="text" name="celular" maxlength="11" value="<?php echo $celular_inscricao; ?>" disabled></td>
+                            <td><input style="width:105px" type="text" name="celular" maxlength="11" value="<?php echo $celular_inscricao; ?>" disabled></td>                            
                         </tr>						
+                        <tr>                            
+                            <td colspan="3" style="padding: 20px 0 5px 0;"><center><a class="a2"  title="Cadastrar aluno" href="estudantes.php?pg=cadastra&etapa=1&inscricao=<?php echo $cod_inscricao;?>">Adicionar para Aluno</a></center></td>
+                        </tr>
                     </table>				
                     <br/>				
                     <?php
@@ -297,22 +302,26 @@
                 ?>                
 
                 <!CONSULTA DA LISTA DE ESPERA>
+                    
+                <table class="buttons_cadastra">
+                    <tr>
+                        <td><a class="a2" title="Cadastrar alunos na lista de espera" href="estudantes.php?pg=espera&amp;cadastra=sim">Cadastrar na lista de espera</a></td>
+                        <td style="text-align: right; padding-right: 5px; color: #FFF;">Buscar:</td>
+                        <td style="width: 240px;"><input id="busca_inscricao" placeholder="nome, código, telefone, celular ou email" type="text" style="border-radius: 8px; border: none;" /></td>
+                    </tr>
+                </table>
                 
-                <br/>
-                <a class="a2" title="Cadastrar alunos na lista de espera" href="estudantes.php?pg=espera&amp;cadastra=sim">Cadastrar na lista de espera</a>
-
-                <?php
-                $select_inscricao = $crud->select('id_inscricao, data_inscricao, nome_aluno, email, telefone_contato, celular_contato', 'inscricao', 'WHERE nome_aluno IS NOT NULL ORDER BY data_inscricao ASC')->run();
+                <?php $select_inscricao = $crud->select('id_inscricao, data_inscricao, nome_aluno, email, telefone_contato, celular_contato', 'inscricao', 'WHERE nome_aluno IS NOT NULL AND inscrito = 0 ORDER BY data_inscricao ASC')->run();
 
                 if ($select_inscricao->rowCount() <= 0) {
                     echo "<h2>Não exisite nenhuma inscrição no momento</h2>";
-                } else {
-                    ?>                    
+                } else { ?>                    
                     <h1>Alunos que estão na lista de espera</h1>
                     <br/>                    
-                    <table width="900" border="0" class="bordasimples">
+                    <table width="900" border="0" id="tabela" class="bordasimples">
                         <thead>
                             <tr>
+                                <th>Posição</th>
                                 <th width="100">
                                     <center><strong>Código de Inscrição</strong></center>
                                 </th>
@@ -332,11 +341,12 @@
                                     <center><strong>Celular</strong></center>
                                 </th>
                                 <th>
-                                    <center><strong>Modificar</strong></center>
+                                    <center><strong>Modificar</strong></center>                                    
                                 </th>
                             </tr>
                         </thead>
-                        <?php
+                        <?php 
+                        $pos = 1;
                         while ($val_select_inscricao = $select_inscricao->fetch(PDO::FETCH_ASSOC)) {
 
                             $class = @$i % 2 == 0 ? ' class="dif"' : '';
@@ -346,40 +356,42 @@
                             $nome_inscricao = $val_select_inscricao['nome_aluno'];
                             $email_inscricao = $val_select_inscricao['email'];
                             $telefone_inscricao = $val_select_inscricao['telefone_contato'];
-                            $celular_inscricao = $val_select_inscricao['celular_contato'];
-                            ?>
-
-                            <tr <?php echo $class; ?> >
-                                <td> 
-                                    <center><?php echo $id_inscricao; ?></center>
-                                </td>
-                                <td>
-                                    <center><?php echo date("d/m/Y h:i:s", strtotime($data_inscricao)); ?></center>
-                                </td>							
-                                <td>
-                                    <center><?php echo $nome_inscricao; ?></center>
-                                </td>							
-                                <td>
-                                    <center><?php echo $email_inscricao; ?></center>
-                                </td>
-                                <td>
-                                    <center><?php echo $telefone_inscricao; ?></center>
-                                </td>
-                                <td>
-                                    <center><?php echo $celular_inscricao; ?></center>
-                                </td>
-                                <td>
-                                    <center>
-                                        <a href="estudantes.php?pg=espera&amp;mod=visualiza&inscricao=<?php echo $id_inscricao; ?>" ><img title="Visualizar" src="img/lupa_turma.png" width="18" height="18" ></a>
-                                        <a href="estudantes.php?pg=espera&amp;mod=edita&inscricao=<?php echo $id_inscricao; ?>"><img title="Atualizar" src="img/editar.png" width="18" height="18" ></a>
-                                        <a href="estudantes.php?pg=espera&amp;mod=deleta&inscricao=<?php echo $id_inscricao; ?>"><img title="Deletar" src="img/deletar.ico" width="18" height="18" ></a>
-                                    </center>								
-                                </td>
-                            </tr>
-                            <?php @$i++;
-                        }
-                        ?>
+                            $celular_inscricao = $val_select_inscricao['celular_contato']; ?>
+                        
+                            <tbody>
+                                <tr <?php echo $class; ?> onclick="location.href = 'estudantes.php?pg=espera&amp;mod=visualiza&inscricao=<?php echo $id_inscricao; ?>'" style="cursor: pointer;" title="Clique aqui para mais informações">
+                                    <th><center><?php echo @$pos.'º'; ?></center></th>
+                                    <td> 
+                                        <center><?php echo $id_inscricao; ?></center>
+                                    </td>
+                                    <td>
+                                        <center><?php echo date("d/m/Y h:i:s", strtotime($data_inscricao)); ?></center>
+                                    </td>							
+                                    <td>
+                                        <center><?php echo $nome_inscricao; ?></center>
+                                    </td>							
+                                    <td>
+                                        <center><?php echo $email_inscricao; ?></center>
+                                    </td>
+                                    <td>
+                                        <center><?php echo $telefone_inscricao; ?></center>
+                                    </td>
+                                    <td>
+                                        <center><?php echo $celular_inscricao; ?></center>
+                                    </td>
+                                    <th>
+                                        <center>                                        
+                                            <a href="estudantes.php?pg=espera&amp;mod=edita&inscricao=<?php echo $id_inscricao; ?>"><img title="Atualizar" src="img/editar.png" width="18" height="18" /></a>
+                                            <a href="estudantes.php?pg=espera&amp;mod=deleta&inscricao=<?php echo $id_inscricao; ?>"><img title="Deletar" src="img/deletar.ico" width="18" height="18" /></a>
+                                        </center>								
+                                    </th>
+                                </tr>
+                            </tbody>
+                        <?php @$i++; @$pos++; } ?>
                     </table>
+                    <script>
+                        $('input#busca_inscricao').quicksearch('table#tabela tbody tr', {'selector': 'td' } );
+                    </script>
                     <br/> 
                 <?php } ?>
                     
@@ -451,6 +463,11 @@
                 $cep_A = $dados['cep_aluno'];
                 $escola_A = $dados['escola_aluno'];
                 $escolaridade_A = $dados['escolaridade_aluno'];
+                //tudo pelo visualização :)
+                $escolaridade_A = str_replace('_', ' ', $escolaridade_A);
+                $escolaridade_A = str_replace('ed', 'éd', $escolaridade_A);
+                $escolaridade_A = str_replace('id', 'íd', $escolaridade_A);
+                
                 $matriculado = $dados['matriculado'];
                 $dt_matricula = $dados['dt_matricula'];
                 $dt_matricula = date("d/m/Y", strtotime($dt_matricula));
@@ -479,7 +496,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Código de Inscrição:</td>
+                        <td>Código do Aluno:</td>
                         <td>Data de Inscrição:</td>
                         <td>Código do Aluno:</td>								
                     </tr>
@@ -659,7 +676,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">
+                        <td colspan="3">
                             <br>
                             <i><center><b>Matrícula</b></center></i>
                             <br>
@@ -668,6 +685,7 @@
                     <tr>
                         <td>Data de matricula:</td>					
                         <td>Turma:</td>								
+                        <td></td>
                     </tr>
                     <tr>								
                         <td>							
@@ -675,7 +693,8 @@
                         </td>
                         <td>							
                             <input type="text" value="<?php echo $nome_turma; ?>" disabled >
-                        </td>							
+                        </td>
+                        <td><a class="a2" title="Trocar turma do aluno" href="estudantes.php?pg=aluno&trocar_turma=sim&aluno=<?php echo $cod_inscricao; ?>&turma=<?php echo $cod_turma; ?>">Trocar Turma</a></td>
                     </tr>
                     <tr>
                         <td colspan="2">
@@ -1009,12 +1028,11 @@
                 <?php if (@$_GET['etapa'] == '1') { // aqui abre a etapa 1 ?>			
                     <h1>1ª Etapa: Cadastre os dados pessoais</h1>
 
-                    <?php if (isset($_POST['button'])) {
-
-                        //$_aluno = $_POST['code'];
-                        $id_inscricao = $_POST['cod_inscricao'];
+                    <?php if (isset($_POST['cadastrar_pt_1'])) {
+                        
+                        $id_aluno = $_GET['inscricao'];
                         $data_nascimento_aluno = $_POST['data_nascimento_aluno'];
-                        $rg_aluno = $_POST['rg_aluno'];
+                        $rg_aluno = $_POST['rg_aluno'];                        
                         $cpf_aluno = $_POST['cpf_aluno'];
                         $rua = $_POST['rua_aluno'];
                         $numero = $_POST['numero_aluno'];
@@ -1022,45 +1040,50 @@
                         $cidade_aluno = $_POST['cidade_aluno'];
                         $complemento_aluno = $_POST['complemento_aluno'];
                         $cep_aluno = $_POST['cep_aluno'];
-                        $escolaridade = $_POST['escolaridade'];
+                        $escolaridade = $_POST['escolaridade'];                        
                         $escola = $_POST['escola'];
-
-                        $insert_aluno = $crud->insert('aluno', 'id_aluno, data_nascimento_aluno, rg_aluno, cpf, rua_aluno, numero_aluno, bairro_aluno, cidade_aluno, complemento_aluno, cep_aluno, escolaridade, escola', '(:id_inscricao, :data_nascimento_aluno, :rg_aluno, :cpf_aluno, :rua_aluno, :numero_aluno, :bairro_aluno, :cidade_aluno, :complemento_aluno, :cep_aluno, :escolaridade, :escola)')->run([':id_inscricao' => $id_inscricao, ':data_nascimento_aluno' => $data_nascimento_aluno, ':rg_aluno' => $rg_aluno, ':cpf_aluno' => $cpf_aluno, ':rua_aluno' => $rua, ':numero_aluno' => $numero, ':bairro_aluno' => $bairro_aluno, ':cidade_aluno' => $cidade_aluno, ':complemento_aluno' => $complemento_aluno, ':cep_aluno' => $cep_aluno, ':escolaridade' => $escolaridade, ':escola' => $escola]);
+                        
+                        $insert_aluno = $crud->insert('aluno', 'id_aluno, data_nascimento_aluno, rg_aluno, cpf, rua_aluno, numero_aluno, bairro_aluno, cidade_aluno, complemento_aluno, cep_aluno, escolaridade, escola', '(:id_aluno, :data_nascimento_aluno, :rg_aluno, :cpf_aluno, :rua_aluno, :numero_aluno, :bairro_aluno, :cidade_aluno, :complemento_aluno, :cep_aluno, :escolaridade, :escola)')->run([':id_aluno' => $id_aluno, ':data_nascimento_aluno' => $data_nascimento_aluno, ':rg_aluno' => $rg_aluno, ':cpf_aluno' => $cpf_aluno, ':rua_aluno' => $rua, ':numero_aluno' => $numero, ':bairro_aluno' => $bairro_aluno, ':cidade_aluno' => $cidade_aluno, ':complemento_aluno' => $complemento_aluno, ':cep_aluno' => $cep_aluno, ':escolaridade' => $escolaridade, ':escola' => $escola]);
+                        $crud->update('inscricao', 'inscrito = 1', 'WHERE id_inscricao = ?')->run([$id_aluno]);
 
                         if ($insert_aluno->rowCount() <= 0) {
                             echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
                         } else {
-                            echo "<script language='javascript'>window.location='estudantes.php?pg=cadastra&etapa=2&inscricao=$id_inscricao';</script>"; 
+                            echo "<script language='javascript'>window.location='estudantes.php?pg=cadastra&etapa=2&aluno=$id_aluno';</script>"; 
                         }
                     } ?>
 
-                    <form name="form1" method="post">
+                    <form method="POST">
                         <table width="900" border="0">
                             <tr>
-                                <td>Código de inscrição:</td>
+                                <td>Código:</td>
                                 <td>Nome completo:</td>
                                 <td>Data de nascimento:</td>
+                                <td>RG:</td>
                             </tr>
                             <tr>
-                                <td><input type="number" title="Insira o código de inscrição" name="cod_inscricao" onkeyup="mostra_nome_aluno(this.value)" /></td>
+                                <?php $get_id = $crud->select('id_inscricao, nome_aluno', 'inscricao', 'WHERE id_inscricao = ?')->run([$_GET['inscricao']]);
+                                $val_get_id = $get_id->fetch(PDO::FETCH_ASSOC); ?>
+                                <td><input type="text" disabled="disabled" value="<?php echo $val_get_id['id_inscricao']; ?>" /></td>
+                                <td><input type="text" disabled="disabled" value="<?php echo $val_get_id['nome_aluno']; ?>" /></td>
+                                <!-- <td><input type="number" title="Insira o código de inscrição" name="cod_inscricao" onkeyup="mostra_nome_aluno(this.value)" /></td>
                                 <td>
                                     <div id = "mostra_nome_aluno">
-                                        <input type="text" disabled="disabled"/>
+                                        <input type="text" disabled="disabled" />
                                     </div>
-                                </td>
+                                </td>-->
                                 <td><input type="date" title="Selecione a data de nascimento" name="data_nascimento_aluno" /></td>
+                                <td><input type="text" title="Insira o RG" name="rg_aluno" maxlength="14"/></td>
                             </tr>
-                            <tr>
-                                <td>RG:</td>
+                            <tr>                                
                                 <td>CPF:</td>
                                 <td>Rua:</td>
                                 <td>Número:</td>
                             </tr>
-                            <tr>
-                                <td><input type="text" title="Insira o RG" name="rg_aluno" maxlength="14"/></td>
+                            <tr>                                
                                 <td><input type="text" title="Insira o CPF" name="cpf_aluno" maxlength="11"/></td>
-                                <td><input type="text" title="Insira o rua" name="rua_aluno" maxlength="11"/></td>
-                                <td><input type="text" title="Insira o número residêncial" name="numero_aluno"/></td>
+                                <td><input type="text" title="Insira o rua" name="rua_aluno" maxlength="60"/></td>
+                                <td><input type="text" title="Insira o número residêncial" maxlength="5" name="numero_aluno"/></td>
                             </tr>
                             <tr>														  	
                                 <td>Bairro:</td>
@@ -1068,9 +1091,9 @@
                                 <td>Complemento:</td>
                             </tr>
                             <tr>
-                                <td><input type="text" title="Insira o bairro" name="bairro_aluno" /></td>
-                                <td><input type="text" title="Insire a cidade" name="cidade_aluno" /></td>
-                                <td><input type="text" title="Insire algun complemento" name="complemento_aluno" /></td>
+                                <td><input type="text" title="Insira o bairro" maxlength="60" name="bairro_aluno" /></td>
+                                <td><input type="text" title="Insire a cidade" maxlength="60" name="cidade_aluno" /></td>
+                                <td><input type="text" title="Insire algun complemento" maxlength="100" name="complemento_aluno" /></td>
                             </tr>
                             <tr>
                                 <td>Cep:</td>
@@ -1080,17 +1103,17 @@
                             <tr>								
                                 <td><input type="text" title="Insira o CEP" name="cep_aluno" maxlength="8" /></td>
                                 <td>
-                                    <select name="escolaridade" title="Selecione a escolaridade" size="1" >
-                                        <option value="Ensino fundamental cursando">Ensino fundamental cursando</option>
-                                        <option value="Ensino fundamental concluído">Ensino fundamental concluído</option>
-                                        <option value="Ensino médio cursando">Ensino médio cursando</option>
-                                        <option value="Ensino médio concluído">Ensino médio concluído</option>
+                                    <select name="escolaridade" title="Selecione a escolaridade">
+                                        <option value="Ensino_fundamental_cursando">Ensino fundamental cursando</option>
+                                        <option value="Ensino_fundamental_concluido">Ensino fundamental concluído</option>
+                                        <option value="Ensino_medio_cursando">Ensino médio cursando</option>
+                                        <option value="Ensino_medio_concluido">Ensino médio concluído</option>
                                     </select>									
                                 </td>
                                 <td><input type="text" name="escola" title="Insira o nome da escola" /></td>
                             </tr>
                             <tr>
-                                <td colspan="3"><center><input class="input" title="Avançar" type="submit" name="button" value="Avançar"/></center></td>
+                                <td colspan="3"><center><input class="input" title="Avançar" type="submit" name="cadastrar_pt_1" value="Avançar"/></center></td>
                             </tr>
                         </table>
                     </form>
@@ -1098,31 +1121,89 @@
                 <?php } // aqui fecha a etapa 1 ?>
                 <?php if (@$_GET['etapa'] == '2') { // aqui abre a etapa 2 ?>			
                     <h1>2ª Etapa: Cadastro de dados do responsável</h1>
-                    <?php if (isset($_POST['button'])) {
-
-                        $id_inscricao = $_GET['inscricao'];
-                        $id_responsavel = $_POST['id_responsavel'];
-                        $nome_responsavel = $_POST['nome_responsavel'];
-                        $data_nascimento_responsavel = $_POST['data_nasc_resp'];
-                        $sexo_responsavel = $_POST['sexo_responsavel'];
-                        $cpf_responsavel = $_POST['cpf_responsavel'];
-                        $rg_responsavel = $_POST['rg_responsavel'];
-                        $email_responsavel = $_POST['email_responsavel'];
-
-                        $insert_responsavel = $crud->insert('responsavel', 'nome_responsavel, data_nascimento_responsavel, sexo_responsavel, cpf, rg_responsavel, email', '(:nome, :data, :sexo, :cpf, :rg, :email)')->run([':nome' => $nome_responsavel, ':data' => $data_nascimento_responsavel, ':sexo' => $sexo_responsavel, ':cpf' => $cpf_responsavel, ':rg' => $rg_responsavel, ':email' => $email_responsavel]);;
-                        if ($insert_responsavel->rowCount() <= 0) {
-                            echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
+                    <?php $id_aluno = $_GET['aluno'];?>
+                    <table class="buttons_cadastra"><tr><td><a href="<?php echo 'estudantes.php?pg=cadastra&etapa=2&aluno='.$id_aluno.'&cadastro=sim';?>">Já Possuí Cadastro?</a></td></tr></table>
+                    <?php if (isset($_POST['cadastrar_pt_2'])) {
+                        
+                        if (@$_GET['cadastro'] == 'sim' ) {
+                            
+                            $id_responsavel = $_POST['id_resp'];
+                            $id_aluno = $_GET['aluno'];
+                            
+                            $crud->update('aluno', 'id_responsavel = :id_responsavel', 'WHERE id_aluno = :id_inscricao')->run([':id_responsavel' => $id_responsavel, ':id_inscricao' => $id_aluno]);
+                            
+                            echo "<script language='javascript'>window.location='estudantes.php?pg=cadastra&etapa=3&aluno=$id_aluno';</script>";
+                            
                         } else {
-                            $last_id_respondavel = $crud->con()->lastInsertId();
+                            
+                            $id_inscricao = $_GET['inscricao'];
+                            $id_responsavel = $_POST['id_responsavel'];
+                            $nome_responsavel = $_POST['nome_responsavel'];
+                            $data_nascimento_responsavel = $_POST['data_nasc_resp'];
+                            $sexo_responsavel = $_POST['sexo_responsavel'];
+                            $cpf_responsavel = $_POST['cpf_responsavel'];
+                            $rg_responsavel = $_POST['rg_responsavel'];
+                            $email_responsavel = $_POST['email_responsavel'];
 
-                            $crud->update('aluno', 'id_responsavel = :id_responsavel', 'WHERE id_aluno = :id_inscricao')->run([':id_responsavel' => $last_id_respondavel, ':id_inscricao' => $id_inscricao]);
+                            $insert_responsavel = $crud->insert('responsavel', 'nome_responsavel, data_nascimento_responsavel, sexo_responsavel, cpf, rg_responsavel, email', '(:nome, :data, :sexo, :cpf, :rg, :email)')->run([':nome' => $nome_responsavel, ':data' => $data_nascimento_responsavel, ':sexo' => $sexo_responsavel, ':cpf' => $cpf_responsavel, ':rg' => $rg_responsavel, ':email' => $email_responsavel]);
+                            if ($insert_responsavel->rowCount() <= 0) {
+                                echo "<script language='javascript'> window.alert('Erro ao Cadastrar!');</script>";
+                            } else {
+                                $last_id_respondavel = $crud->con()->lastInsertId();
 
-                            echo "  <script language='javascript'> 
-                                        window.alert('Cadastro Realizado com sucesso!!'); 
-                                        window.location='estudantes.php?pg=cadastra&etapa=resumo';
-                                    </script>";
+                                $crud->update('aluno', 'id_responsavel = :id_responsavel', 'WHERE id_aluno = :id_inscricao')->run([':id_responsavel' => $last_id_respondavel, ':id_inscricao' => $id_inscricao]);
+                                
+                                echo "<script language='javascript'>window.location='estudantes.php?pg=cadastra&etapa=3&aluno=$id_aluno';</script>";
+                            }                        
                         }
-                    } ?>
+                    } 
+                    if (@$_GET['cadastro'] == 'sim'){
+                        
+                        if (isset($_POST['busca_id_responsavel'])) {
+                            
+                            $id_responsavel = $_POST['id_responsavel'];
+                            $busca_resp = $crud->select('id_responsavel, nome_responsavel, sexo_responsavel, data_nascimento_responsavel, cpf, rg_responsavel, email', 'responsavel', 'WHERE id_responsavel = ? AND status_responsavel = 1')->run([$id_responsavel]);
+                            $valores_responsavel = $busca_resp->fetch(PDO::FETCH_ASSOC);    
+                        } ?>
+                        <form method="POST">
+                        <table width="900" border="0">
+                            <tr>
+                                <td>Código do responsável:</td>			
+                                <td>Nome do responsável:</td>
+                                <td>Sexo do responsável:</td>
+                                <td>data de Nascimento do Responsavel:</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" name="id_responsavel" maxlength="6" value="<?php echo @$valores_responsavel['id_responsavel'];?>" style="width: 130px;"/><input type="hidden" name="id_resp" value="<?php echo @$valores_responsavel['id_responsavel'];?>"/><input style="margin-left: 10px;" type="submit" class="input" value="Buscar" title="Clique aqui para pesquisar o codigo do responsavel" name="busca_id_responsavel"/>
+                                </td>                             
+                                <td>
+                                    <input type="text" disabled value="<?php echo @$valores_responsavel['nome_responsavel'];?>" />
+                                </td>
+                                <td>
+                                    <input type="text" disabled value="<?php echo @$valores_responsavel['sexo_responsavel'];?>" />
+                                </td>
+                                <td>
+                                    <input type="date" disabled value="<?php echo @$valores_responsavel['data_nascimento_responsavel'];?>" />
+                                </td>     
+                            </tr>
+                            <tr>
+                                <td>CPF do responsável:</td>
+                                <td>RG do responsável:</td>
+                                <td>E-mail do responsável:</td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" disabled value="<?php echo @$valores_responsavel['cpf'];?>" /></td>
+                                <td><input type="text" disabled value="<?php echo @$valores_responsavel['rg_responsavel'];?>" /></td>
+                                <td><input type="email" disabled value="<?php echo @$valores_responsavel['email'];?>" /></td>
+                            </tr>    
+                            <tr>
+                                <td colspan="4" style="padding-top: 10px;"><center><input class="input" title="Concluir" type="submit" name="cadastrar_pt_2" id="button" value="Concluir"/></center></td>
+                            </tr>
+                        </table>
+                    </form>                       
+                        
+                    <?php die; } ?>
 
                     <form name="form1" method="post">
                         <table width="900" border="0">
@@ -1169,18 +1250,68 @@
                                 <td><input type="email" title="Insira o email do Responsável" name="email_responsavel" /></td>
                             </tr>    
                             <tr>
-                                <td colspan="3"><input class="input" title="Concluir" type="submit" name="button" id="button" value="Concluir"/></td>
+                                <td colspan="3"><input class="input" title="Concluir" type="submit" name="cadastrar_pt_2" id="button" value="Concluir"/></td>
                             </tr>
                         </table>
                     </form>
                     <br/>			
                 <?php }// aqui fecha o bloco 2 ?>
+                    
+                <?php if (@$_GET['etapa'] == '3') { // aqui abre a etapa 3 
+                    if (@$_GET['turma'] != NULL) {
+                        
+                        $id_aluno = $_GET['aluno'];
+                        $id_turma = $_GET['turma'];
+                        $insert_turma_into_aluno = $crud->update('aluno', 'id_turma = :turma, data_matricula = :dt, matriculado = 1', 'WHERE id_aluno = :aluno')->run([':turma' => $id_turma, ':dt' => date('Y-m-d'), ':aluno' => $id_aluno]);                                              
+                        
+                        echo "<script language='javascript'>window.location='estudantes.php?pg=cadastra&etapa=resumo';</script>";
+                    } ?>
+                    
+                    <h1>3ª Etapa: - Escolher Turma</h1>
+                    
+                    <?php $id_aluno = $_GET['aluno'];
+                    $select_turma = $crud->select('id_turma, nome_turma, quantidade_alunos, disponivel', 'turma', 'ORDER BY nome_turma')->run(); ?>
+                    <form method="POST">                          
+                        <table width="900" border="0" class="bordasimples">
+                            <thead>
+                                <tr>
+                                    <th><center><strong> Turma </strong></center></th>
+                                    <th><center><strong>Total de alunos nesta turma</strong></center></th>
+                                    <th><center><strong>Selecionar</strong></center></th>
+                                </tr>
+                            </thead>
+                            <?php while ($valores_turma = $select_turma->fetch(PDO::FETCH_ASSOC)) {
+
+                                $class = @$i % 2 == 0 ? ' class="dif"' : '';
+                                $nome_turma = $valores_turma['nome_turma'];
+                                $qtde_alunos = $valores_turma['quantidade_alunos'];
+                                $cod_turma = $valores_turma['id_turma'];
+                                $select_count_turma = $crud->select('id_aluno', 'aluno', 'WHERE id_turma = ? AND status_aluno = 1')->run([$cod_turma]);
+                                $qtde_total = $select_count_turma->rowCount();
+                                if ($qtde_total == $qtde_alunos) {
+                                    $crud->update('turma', 'disponivel = 0', 'WHERE id_turma = ?')->run([$cod_turma]);                                  
+                                }?>
+
+                                <tr <?php echo $class; ?>>
+                                    <td><center><?php echo $nome_turma; ?></center></td>
+                                    <td><center><?php echo $qtde_total . ' | ' . $qtde_alunos; ?></center></td>
+                                    <?php if ($valores_turma['disponivel'] == 1) { ?>
+                                        <td><center><a href="<?php echo 'estudantes.php?pg=cadastra&etapa=3&aluno='.$id_aluno.'&turma='.$cod_turma;?>"><img title="Selecionar Turma <?php echo $nome_turma; ?>" src="img/success.png" width="18" height="18" border="0"/></a></center></td>
+                                    <?php } else { ?>
+                                        <td><center><label>Indisponível</label></center></td>
+                                    <?php } ?>                                    
+                                </tr>
+                            <?php @$i++; } ?>
+                        </table>
+                    </form>
+                <?php } // aqui fecha a etapa 3 ?>
+                    
                 <?php if (@$_GET['etapa'] == 'resumo') { // aqui abre a etapa resumo ?>
-                    <h1>3º Passo - Mensagem de confirmação</h1>
+                    <h1>4º Passo - Mensagem de confirmação</h1>
                     <table>
                         <tr>
                             <td>
-                                <h4>Este(a) Estudante cadastrado com sucesso!
+                                <h4>Este(a) Estudante Foi cadastrado com sucesso!
                                 <ul>
                                     <li>Fique atento em relação a chamada pois com 3 faltas não justificadas ele será removido do cursinho!</li>
                                 </ul>
@@ -1192,57 +1323,133 @@
                     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                 <?php }// aqui fecha a etapa resumo ?>
             <?php }// aqui fecha a PG cadastra ?>
+                    
+                    
+        <!Trocar Aluno de Turma>
+            <?php if (@$_GET['trocar_turma'] == 'sim'){
+                
+                $id_aluno = @$_GET['aluno'];
+                $id_turma = @$_GET['turma'];
+                
+                if (@$_GET['new_turma']){
+                    $new_turma = @$_GET['new_turma'];
+                    $crud->update('aluno', 'id_turma = ?', 'WHERE id_aluno = ?')->run([$new_turma, $id_aluno]);
+                    echo "<script language='javascript'> window.alert('Atualizado com Sucesso'); window.location='estudantes.php?pg=aluno&mod=visualiza&aluno=$id_aluno';</script>";                    
+                }?>
+
+                <h1>Alteração de Turma</h1>
+
+                <?php $select_turma = $crud->select('id_turma, nome_turma, quantidade_alunos, disponivel', 'turma', 'ORDER BY nome_turma')->run(); ?>
+                <form method="POST">                          
+                    <table width="900" border="0" class="bordasimples">
+                        <thead>
+                            <tr>
+                                <th><center><strong> Turma </strong></center></th>
+                                <th><center><strong>Total de alunos nesta turma</strong></center></th>
+                                <th><center><strong>Selecionar</strong></center></th>
+                            </tr>
+                        </thead>
+                        <?php while ($valores_turma = $select_turma->fetch(PDO::FETCH_ASSOC)) {
+
+                            $class = @$i % 2 == 0 ? ' class="dif"' : '';
+                            $nome_turma = $valores_turma['nome_turma'];
+                            $qtde_alunos = $valores_turma['quantidade_alunos'];
+                            $cod_turma = $valores_turma['id_turma'];
+                            $select_count_turma = $crud->select('id_aluno', 'aluno', 'WHERE id_turma = ? AND status_aluno = 1')->run([$cod_turma]);
+                            $qtde_total = $select_count_turma->rowCount();
+                            if ($qtde_alunos == $qtde_total) {
+                                $crud->update('turma', 'disponivel = 0', 'WHERE id_turma = ?')->run([$cod_turma]);                                  
+                            } else {
+                                $crud->update('turma', 'disponivel = 1', 'WHERE id_turma = ?')->run([$cod_turma]);
+                            }?>
+
+                            <tr <?php echo $class; ?>>
+                                <td><center><?php echo $nome_turma; ?></center></td>
+                                <td><center><?php echo $qtde_total . ' | ' . $qtde_alunos; ?></center></td>
+                                
+                                <?php if ($id_turma == $cod_turma) { ?>
+                                    <td><center><label>Matriculado Aqui</label></center></td>
+                                <?php } else {
+                                    if ($valores_turma['disponivel'] == 1) { ?>
+                                        <td><center><a href="estudantes.php?pg=aluno&trocar_turma=sim&aluno=<?php echo $id_aluno; ?>&turma=<?php echo $id_turma; ?>&new_turma=<?php echo $cod_turma;?>"><img title="Selecionar Turma <?php echo $nome_turma; ?>" src="img/success.png" width="18" height="18" border="0"/></a></center></td>
+                                    <?php } else { ?>
+                                        <td><center><label>Indisponível</label></center></td>
+                                    <?php }
+                                } ?>
+                            </tr>
+                        <?php @$i++; } ?>
+                    </table>
+                </form>
+            <?php die; }?>    
 
             <!BUSCANDO ESTUDANTES NO BANCO>
 
             <?php if (@$_GET['pg'] == 'aluno') { ?>
-                <a class="a2" title="Fazer o cadastro de um aluno" href="estudantes.php?pg=cadastra&etapa=1">Cadastrar alunos</a>
+                <table class="buttons_cadastra">
+                    <tr>
+                        <td><a class="a2" title="Fazer o cadastro de um aluno" href="estudantes.php?pg=cadastra&etapa=1">Cadastrar alunos</a></td>
+                        <td style="text-align: right; padding-right: 5px; color: #FFF;">Buscar:</td>
+                        <td style="width: 240px;"><input id="txt_consulta" placeholder="Insira o nome, cpf, rg ou código aqui" type="text" style="border-radius: 8px; border: none;" /></td>
+                    </tr>
+                </table>                
                 <h1>Alunos cadastradados</h1>
-                <br/>
-                <?php 
-                $select_inscricao_aluno = $crud->select('*', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno WHERE i.nome_aluno IS NOT NULL ORDER BY i.nome_aluno')->run();
+                <?php if (@$_GET['mostra'] == 'inativo') { 
+                    $val_status = 0; ?>
+                    <a class='a2' style='color: white; background-color: #044c88;' href='estudantes.php?pg=aluno'>Mostrar Alunos Ativos</a>
+                <?php } else { 
+                    $val_status = 1; ?>
+                    <a class='a2' style='color: white; background-color: #b93434;' href='estudantes.php?pg=aluno&mostra=inativo'>Mostrar Alunos Inativos</a>
+                <?php }?>                
+                <br/><br/>
+                <?php $select_inscricao_aluno = $crud->select('*', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno WHERE i.nome_aluno IS NOT NULL AND status_aluno = ? ORDER BY i.nome_aluno')->run([$val_status]);
                 
-                if ($select_inscricao_aluno->rowCount() <= 0) {
-                    echo "<h2>Não exisite nenhum aluno cadastrado no momento</h2>";
-                } else { ?>
-                    <table width="900" border="0" class="bordasimples">
+                if ($select_inscricao_aluno->rowCount() <= 0) { ?>
+                    <table width="900" border="0"><tr><td><h2>Ainda não existe nenhum registro</h2></td></tr></table>
+                <?php } else { ?>
+                    <table width="900" border="0" id="tabela" class="bordasimples">
                         <thead>
                             <tr>						
                                 <th><center><strong>Código</strong></center></th>
                                 <th><center><strong>Nome Completo</strong></center></th>
                                 <th><center><strong>RG</strong></center></th>
                                 <th><center><strong>CPF</strong></center></th>
-                                <th><center><strong>Telefone </strong></center></th>
+                                <th><center><strong>Telefone </strong></center></th>                                    
                                 <th><center><strong>Celular</strong></center></th>
-                                <th><center><strong>Modificar</strong></center></th>
+                                <?php echo (@$_GET['mostra'] == 'inativo') ?'':'<th><center><strong>Modificar</strong></center></th>';?>
                             </tr>
                         </thead>
                         <?php while ($val_inscricao_aluno = $select_inscricao_aluno->fetch(PDO::FETCH_ASSOC)) { 
-                            $class = @$i % 2 == 0 ? ' class="dif"' : ''; ?> 
-                        <tr <?php echo $class; ?> >
-                                <td><center><?php echo $val_inscricao_aluno['id_aluno']; ?></center></td>
+                            $class = @$i % 2 == 0 ? ' class="dif"' : '';
+                            $id_aluno = $val_inscricao_aluno['id_aluno'];?>
+                            
+                            <?php if (@$_GET['mostra'] == 'inativo') { ?>
+                                <tr <?php echo $class;?> style="color: #b93434" onclick="location.href = 'estudantes.php?pg=aluno&mostra=inativo&mod=visualiza&aluno=<?php echo $id_aluno;?>'" >    
+                            <?php } else { ?>
+                                <tr <?php echo $class;?>>
+                            <?php } ?>
+                                <td><center><?php echo $id_aluno; ?></center></td>
                                 <td><center><?php echo $val_inscricao_aluno['nome_aluno']; ?></center></td>
                                 <td><center><?php echo $val_inscricao_aluno['rg_aluno']; ?></center></td>
                                 <td><center><?php echo $val_inscricao_aluno['cpf']; ?></center></td>
                                 <td><center><?php echo $val_inscricao_aluno['telefone_contato']; ?></center></td>
                                 <td><center><?php echo $val_inscricao_aluno['celular_contato']; ?></center></td>
-                                <td>
-                                    <center>									
-                                        <a href="estudantes.php?pg=aluno&mod=visualiza&aluno=<?php echo $val_inscricao_aluno['id_aluno']; ?>" ><img title="Visualizar" src="img/lupa_turma.png" width="18" height="18" border="0"></a>
-                                        <a href="estudantes.php?pg=aluno&mod=atualiza&aluno=<?php echo $val_inscricao_aluno['id_aluno']; ?>"><img title="Atualizar" src="img/editar.png" width="18" height="18" border="0"></a>
-                                        <a href="estudantes.php?pg=aluno&mod=deleta&aluno=<?php echo $val_inscricao_aluno['id_aluno']; ?>"><img title="Deletar" src="img/deletar.ico" width="18" height="18" border="0"></a>
-                                    </center>	
-                                </td>							
+                                <?php if (!@$_GET['mostra'] == 'inativo') { ?>
+                                    <td>
+                                        <center>									
+                                            <a href="estudantes.php?pg=aluno&mod=visualiza&aluno=<?php echo $id_aluno; ?>"><img title="Visualizar" src="img/lupa_turma.png" width="18" height="18" border="0"></a>
+                                            <a href="estudantes.php?pg=aluno&mod=atualiza&aluno=<?php echo $id_aluno; ?>"><img title="Atualizar" src="img/editar.png" width="18" height="18" border="0"></a>                                            
+                                        </center>	
+                                    </td>
+                                <?php } ?>
                             </tr>
-                            <?php @$i++;
-                        } ?>
+                        <?php @$i++; } ?>
                     </table>
+                    <script>
+                        $('input#txt_consulta').quicksearch('table#tabela tbody tr');
+                    </script>
                     <br/> 
-                <?php } ?>		
-            <?php } ?>
-            <?php if (@$_GET['mod'] == 'deleta'){
-                
-            }?>
+                <?php die; } ?>
+            <?php } ?>                        
         </div>
     </body>
 </html>

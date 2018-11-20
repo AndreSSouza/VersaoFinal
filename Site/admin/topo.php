@@ -63,6 +63,6 @@ require '../class/config.class.php';
                     </li>                    
                 </ul>
             </div>
-        </div>
+        </div>       
     </body>
 </html>

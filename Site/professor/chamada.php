@@ -102,7 +102,7 @@ $id_professor = $_SESSION['cod_professor'];
                             $mascara_status = $status ? "Presente" : "Ausente";
                             $cor = $status ? 'lightgreen' : 'tomato';
                             ?>
-                            <tr>						
+                            <tr style="height: 35px;">						
                                 <td><input type="hidden" value="<?php echo $id_aluno; ?>" name="id_aluno"/><?php echo $nome; ?> </td>
                                 <td><input type="hidden" value="<?php echo $data_usa; ?>" name="data_chamada"/> <?php echo $data_sem_formatacao; ?> </td>
                                 <td style="background-color: <?php echo $cor; ?>"><input type="hidden" value="<?php echo $status; ?>" name="status"/> <?php echo $mascara_status; ?> </td>
