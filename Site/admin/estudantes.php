@@ -475,17 +475,20 @@
                 $cod_turma = $dados['id_turma'];
 
                 //relacionado a chamada
-                $qtde_faltas = $crud->select('COUNT(presenca) AS faltas', 'chamada', 'WHERE id_aluno = :id_aluno AND presenca = 0')->run([':id_aluno' => $cod_aluno]);
+                $qtde_faltas = $crud->select('COUNT(presenca) AS faltas', 'chamada', 'WHERE id_aluno = ? AND presenca = 0')->run([$cod_aluno]);
                 $val_faltas = $qtde_faltas->fetch(PDO::FETCH_ASSOC);
                 $faltas = $val_faltas['faltas'];
+                
+                $justificadas = $crud->select('COUNT(justificada) AS justificada', 'chamada', 'WHERE id_aluno = ? AND justificada = 1')->run([$cod_aluno]);
+                $val_justificadas = $justificadas->fetch(PDO::FETCH_ASSOC);
+                $justificada = $val_justificadas['justificada'];
 
                 //quantidade de aulas já dadas
                 $select_qtde_aulas = $crud->select('COUNT(DISTINCT(c.data_chamada)) AS aulas_dadas', 'chamada c', 'INNER JOIN aluno a ON a.id_aluno = c.id_aluno WHERE (c.data_chamada BETWEEN a.data_matricula AND CURRENT_DATE) AND c.id_aluno = ?')->run([$cod_aluno]);
                 $val_aulas_dadas = $select_qtde_aulas->fetch(PDO::FETCH_ASSOC);
                 $qtde_aulas = $val_aulas_dadas['aulas_dadas'];
 
-                $chamada = $crud->select('c.data_chamada data_chamada, t.nome_turma nome_turma, p.nome_professor nome_professor, i.nome_aluno nome_aluno, c.presenca presenca', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel INNER JOIN turma t ON a.id_turma = t.id_turma INNER JOIN chamada c ON c.id_aluno = a.id_aluno INNER JOIN professor p ON p.id_professor = c.id_professor WHERE (c.data_chamada BETWEEN a.data_matricula AND CURRENT_DATE) AND a.id_aluno = :id_aluno AND a.id_turma = :id_turma ORDER BY c.data_chamada')->run([':id_aluno' => $cod_aluno, ':id_turma' => $cod_turma]);
-                ?>
+                $chamada = $crud->select('c.data_chamada data_chamada, t.nome_turma nome_turma, p.nome_professor nome_professor, i.nome_aluno nome_aluno, c.presenca presenca, c.justificada justificada', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno INNER JOIN turma t ON a.id_turma = t.id_turma INNER JOIN chamada c ON c.id_aluno = a.id_aluno INNER JOIN professor p ON p.id_professor = c.id_professor WHERE (c.data_chamada BETWEEN a.data_matricula AND CURRENT_DATE) AND a.id_aluno = :id_aluno AND a.id_turma = :id_turma ORDER BY c.data_chamada')->run([':id_aluno' => $cod_aluno, ':id_turma' => $cod_turma]); ?>
 
                 <table border="0">
                     <tr>
@@ -501,13 +504,13 @@
                         <td>Código do Aluno:</td>								
                     </tr>
                     <tr>
-                        <td>							
+                        <td>
                             <input type="text" value="<?php echo $cod_inscricao; ?>" disabled >
                         </td>
-                        <td>													
+                        <td>
                             <input type="text" value="<?php echo $dt_inscricao = date('d/m/Y', strtotime($dt_inscricao)); ?>" disabled >
                         </td>
-                        <td>							
+                        <td>
                             <input type="text" value="<?php echo $cod_aluno; ?>" disabled>
                         </td>
                     </tr>
@@ -557,32 +560,32 @@
                         <td>Sexo:</td>
                     </tr>
                     <tr>
-                        <td>							
+                        <td>
                             <input style="width: 25px" type="text" value="<?php echo $cod_responsavel; ?>" disabled >
                         </td>
-                        <td>													
+                        <td>
                             <input type="text" value="<?php echo $nome_R; ?>" disabled >
                         </td>
-                        <td>							
+                        <td>
                             <input type="text" value="<?php echo $dt_nascimento_R; ?>" disabled>
                         </td>
-                        <td>							
+                        <td>
                             <input type="text" value="<?php echo $sexo_R; ?>" disabled>
                         </td>
                     </tr>
                     <tr>
                         <td>Idade:</td>
                         <td>RG:</td>
-                        <td>CPF:</td>								
+                        <td>CPF:</td>
                     </tr>
                     <tr>
-                        <td>							
+                        <td>
                             <input type="text" value="<?php echo $idade_R; ?>" disabled >
                         </td>
-                        <td>													
+                        <td>
                             <input type="text" value="<?php echo $rg_R; ?>" disabled >
                         </td>
-                        <td>							
+                        <td>
                             <input type="text" value="<?php echo $cpf_R; ?>" disabled>
                         </td>
                     </tr>
@@ -597,19 +600,19 @@
                         <td>E-mail do Aluno:</td>
                         <td>E-mail do Responsavel:</td>
                         <td>Telefone para Contato:</td>
-                        <td>Celular para Contato:</td>								
+                        <td>Celular para Contato:</td>
                     </tr>
                     <tr>
-                        <td>							
+                        <td>
                             <input type="text" value="<?php echo $email_A; ?>" disabled >
                         </td>
-                        <td>							
+                        <td>
                             <input type="text" value="<?php echo $email_R; ?>" disabled >
                         </td>
-                        <td>													
+                        <td>
                             <input style="width: 110px" type="text" value="<?php echo $telefone_R; ?>" disabled >
                         </td>
-                        <td>							
+                        <td>
                             <input style="width: 120px" type="text" value="<?php echo $celular_R; ?>" disabled>
                         </td>
                     </tr>	
@@ -626,7 +629,7 @@
                         <td>Bairro:</td>
                     </tr>
                     <tr>
-                        <td>							
+                        <td>
                             <input type="text" value="<?php echo $rua_A; ?>" disabled >
                         </td>
                         <td>
@@ -634,21 +637,21 @@
                         </td>
                         <td>
                             <input type="text" value="<?php echo $bairro_A; ?>" disabled >
-                        </td>							
+                        </td>
                     </tr>
                     <tr>
                         <td>Cidade:</td>	
                         <td>Complemento:</td>
                         <td>CEP:</td>
                     </tr>
-                    <tr>								
-                        <td>							
+                    <tr>
+                        <td>
                             <input type="text" value="<?php echo $cidade_A; ?>" disabled >
                         </td>
-                        <td>							
+                        <td>
                             <input type="text" value="<?php echo $complemento_A; ?>" disabled >
                         </td>
-                        <td>													
+                        <td>
                             <input type="text" value="<?php echo $cep_A; ?>" disabled >
                         </td>
                     </tr>
@@ -660,18 +663,18 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Escolaridade:</td>								
-                        <td>Escola:</td>									
+                        <td>Escolaridade:</td>
+                        <td>Escola:</td>
                         <td>Matriculado:</td>
                     </tr>
-                    <tr>								
-                        <td>							
+                    <tr>
+                        <td>
                             <input type="text" value="<?php echo $escolaridade_A; ?>" disabled >
                         </td>
-                        <td>							
+                        <td>
                             <input type="text" value="<?php echo $escola_A; ?>" disabled >
                         </td>
-                        <td>													
+                        <td>
                             <input type="text" value="<?php echo $matriculado = $matriculado ? "Sim" : "Não"; ?>" disabled >
                         </td>
                     </tr>
@@ -683,43 +686,51 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Data de matricula:</td>					
-                        <td>Turma:</td>								
+                        <td>Data de matricula:</td>
+                        <td>Turma:</td>
                         <td></td>
                     </tr>
-                    <tr>								
-                        <td>							
+                    <tr>
+                        <td>
                             <input type="text" value="<?php echo $dt_matricula; ?>" disabled >
                         </td>
-                        <td>							
+                        <td>
                             <input type="text" value="<?php echo $nome_turma; ?>" disabled >
                         </td>
                         <td><a class="a2" title="Trocar turma do aluno" href="estudantes.php?pg=aluno&trocar_turma=sim&aluno=<?php echo $cod_inscricao; ?>&turma=<?php echo $cod_turma; ?>">Trocar Turma</a></td>
                     </tr>
                     <tr>
-                        <td colspan="2">
-                            <br>
+                        <td colspan="4">
+                            <br/>
                             <i><center><b>Chamada</b></center></i>
-                            <br>
+                            <br/>
                         </td>
                     </tr>
                     <tr>
-                        <td>Quantidade de faltas:</td>					
-                        <td>Quantidade de aulas dadas:</td>								
+                        <td>Quantidade de aulas dadas:</td>
+                        <td>Quantidade de faltas:</td>
+                        <td>Faltas justificadas:</td>
+                        <td width="auto"></td>
                     </tr>
-                    <tr>								
-                        <td>							
-                            <input type="text" value="<?php echo $faltas; ?>" disabled >
+                    <tr>
+                        <td>			
+                            <input type="text" value="<?php echo $qtde_aulas; ?>" disabled/>
                         </td>
-                        <td>							
-                            <input type="text" value="<?php echo $qtde_aulas; ?>" disabled>
-                        </td>							
+                        <td>			
+                            <input type="text" value="<?php echo $faltas; ?>" disabled />
+                        </td>
+                        <td>			
+                            <input type="text" value="<?php echo $justificada; ?>" disabled />
+                        </td>
+                        <td>
+                            <a class="a2" style="width: 150px; margin-left: 10px;" title="Justificar Falta do aluno <?php echo $nome_A;?>" href="estudantes.php?pg=aluno&justificar=sim&aluno=<?php echo $cod_inscricao; ?>">Justificar Falta</a>                            
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="5">
-                            <br>
+                            <br/>
                             <i><center><b>Histórico de presenças</b></center></i>
-                            <br>
+                            <br/>
                         </td>
                     </tr>
                     <tr>
@@ -727,8 +738,8 @@
                         <td><b>Nome da turma</b></td>
                         <td><b>Nome do professor</b></td>
                         <td><b>Nome do aluno</b></td>
-                        <td><b>Status</b></td>								
-                    </tr>							
+                        <td><b>Status</b></td>
+                    </tr>
                     <?php
                     while ($val_chamada = $chamada->fetch(PDO::FETCH_ASSOC)) {
                         $data_chamada = $val_chamada['data_chamada'];
@@ -736,21 +747,30 @@
                         $nomeTurma = $val_chamada['nome_turma'];
                         $nomeProfessor = $val_chamada['nome_professor'];
                         $nomeAluno = $val_chamada['nome_aluno'];
+                        
+                        $falta_justificada = $val_chamada['justificada'];
                         $status = $val_chamada['presenca'];
-                        $cor = $status ? 'lightgreen' : 'tomato';
-                        $status = $status ? "Presença" : "Falta";
-                        ?>
-                                                                                                                                                                                    <tr style="background-color: <?php echo $cor; ?>">
+                        if ($status) {
+                            $cor = 'lightgreen';
+                            $mostra_status = 'Presença';
+                        } else {
+                            if ($falta_justificada) {
+                                $cor = 'mediumslateblue';
+                                $mostra_status = 'Justificada';
+                            } else {
+                                $cor = 'tomato';
+                                $mostra_status = 'Falta';
+                            }
+                        } ?>
+                        <tr style="background-color: <?php echo $cor; ?>">
                             <td><?php echo $data_chamada; ?></td>
                             <td><?php echo $nomeTurma; ?></td>
                             <td><?php echo $nomeProfessor; ?></td>
                             <td><?php echo $nomeAluno; ?></td>
-                            <td><?php echo $status; ?></td>
+                            <td><?php echo $mostra_status; ?></td>
                         </tr>
-                    <?php                         
-                    } 
-                    ?>
-            </table>
+                    <?php } ?>
+                </table>
             <?php die; } ?>
             <!>
                                                                                                                                                             
@@ -1323,7 +1343,80 @@
                     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                 <?php }// aqui fecha a etapa resumo ?>
             <?php }// aqui fecha a PG cadastra ?>
+        <!Justificar Faltas do Aluno>
+            <?php if (@$_GET['justificar']){
+                
+                $cod_aluno = $_GET['aluno'];
+                
+                //relacionado a chamada
+                $qtde_faltas = $crud->select('COUNT(presenca) AS faltas', 'chamada', 'WHERE id_aluno = :id_aluno AND presenca = 0')->run([':id_aluno' => $cod_aluno]);
+                $val_faltas = $qtde_faltas->fetch(PDO::FETCH_ASSOC);
+                $faltas = $val_faltas['faltas'];
+
+                //quantidade de aulas já dadas
+                $select_qtde_aulas = $crud->select('COUNT(DISTINCT(c.data_chamada)) AS aulas_dadas, a.id_turma', 'chamada c', 'INNER JOIN aluno a ON a.id_aluno = c.id_aluno WHERE (c.data_chamada BETWEEN a.data_matricula AND CURRENT_DATE) AND c.id_aluno = ?')->run([$cod_aluno]);
+                $val_aulas_dadas = $select_qtde_aulas->fetch(PDO::FETCH_ASSOC);
+                $qtde_aulas = $val_aulas_dadas['aulas_dadas'];
+                $cod_turma = $val_aulas_dadas['id_turma'];
+
+                $chamada = $crud->select('c.id_chamada, c.data_chamada data_chamada, t.nome_turma nome_turma, p.nome_professor nome_professor, i.nome_aluno nome_aluno, c.presenca presenca, c.justificada', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno INNER JOIN turma t ON a.id_turma = t.id_turma INNER JOIN chamada c ON c.id_aluno = a.id_aluno INNER JOIN professor p ON p.id_professor = c.id_professor WHERE (c.data_chamada BETWEEN a.data_matricula AND CURRENT_DATE) AND a.id_aluno = :id_aluno AND a.id_turma = :id_turma ORDER BY c.data_chamada')->run([':id_aluno' => $cod_aluno, ':id_turma' => $cod_turma]); 
+                
+                if (@$_GET['chamada']) {
                     
+                    $id_chamada = $_GET['chamada'];
+                    $crud->update('chamada', 'justificada = 1', 'WHERE id_chamada = ?')->run([$id_chamada]);
+                    
+                    echo "<script language='javascript'>window.alert('Justificado com sucesso!');window.location='estudantes.php?pg=aluno&mod=visualiza&aluno=".$cod_aluno."';</script>";
+                    
+                } ?>
+                
+                    <table width="900" border="0">
+                        <thead>
+                            <th><b>Data da chamada</b></th>
+                            <th><b>Nome da turma</b></th>
+                            <th><b>Nome do professor</b></th>
+                            <th><b>Nome do aluno</b></th>
+                            <th><b>Status</b></th>								
+                            <th><center>Alterar</center></th>								
+                        </thead>							
+                        <?php
+                        while ($val_chamada = $chamada->fetch(PDO::FETCH_ASSOC)) {
+                            $id_chamada = $val_chamada['id_chamada'];
+                            $data_chamada = $val_chamada['data_chamada'];
+                            $data_chamada = date("d/m/Y", strtotime($data_chamada));
+                            $nomeTurma = $val_chamada['nome_turma'];
+                            $nomeProfessor = $val_chamada['nome_professor'];
+                            $nomeAluno = $val_chamada['nome_aluno'];
+                                                        
+                            $falta_justificada = $val_chamada['justificada'];
+                            $status = $val_chamada['presenca'];
+                            
+                            if ($status) {
+                                $cor = 'lightgreen';
+                                $mostra_status = 'Presença';
+                            } else {
+                                if ($falta_justificada) {
+                                    $cor = 'mediumslateblue';
+                                    $mostra_status = 'Justificada';
+                                } else {
+                                    $cor = 'tomato';
+                                    $mostra_status = 'Falta';
+                                }
+                            } ?>
+                            <tr style="background-color: <?php echo $cor; ?>;height: 35px;" >
+                                <td><?php echo $data_chamada; ?></td>
+                                <td><?php echo $nomeTurma; ?></td>
+                                <td><?php echo $nomeProfessor; ?></td>
+                                <td><?php echo $nomeAluno; ?></td>
+                                <td><?php echo $mostra_status; ?></td>
+                                <td style="width: 99px; background-color: white;">
+                                    <?php echo $td = $status || $falta_justificada ? '' : '<a class="a2" href="estudantes.php?pg=aluno&justificar=sim&aluno='.$cod_aluno.'&chamada='.$id_chamada.'" style="width: auto; height: auto; margin-left: 10px; margin-right: 10px;" >Alterar</a>';?>
+                                </td>
+                            </tr>
+                        <?php } ?>    
+                    </table>
+            <?php die; } ?>
+        
                     
         <!Trocar Aluno de Turma>
             <?php if (@$_GET['trocar_turma'] == 'sim'){

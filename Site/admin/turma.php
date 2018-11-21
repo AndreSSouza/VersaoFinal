@@ -52,9 +52,10 @@
 
                     <table width="900" border="0">
                         <tr>
-                            <td><strong>Nome do aluno</strong></td>
+                            <td style="width: auto"><strong>Nome do aluno</strong></td>
                             <td style="width: auto"></td>
-                            <td><strong>Quantidade de faltas</strong></td>
+                            <td style="width: 162px;"><strong>Quantidade de faltas</strong></td>
+                            <td style="width: auto"><strong>Justificadas</strong></td>
                         </tr>
                         <?php
                         $select = $crud->select('i.nome_aluno AS nome, a.id_aluno AS id_aluno', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno INNER JOIN turma t ON t.id_turma = a.id_turma WHERE t.id_turma = ? AND a.status_aluno = 1')->run([$cod_turma]);
@@ -65,21 +66,26 @@
                             $val_total_faltas = $select_faltas->fetch(PDO::FETCH_ASSOC);
                             $faltas = $val_total_faltas['faltas'];
                             
-                            if ($faltas <= 1){
+                            $select_justificadas = $crud->select('COUNT(justificada) AS justificada', 'chamada', 'WHERE id_aluno = ? AND justificada = 1')->run([$cod_aluno]);
+                            $val_justificadas = $select_justificadas->fetch(PDO::FETCH_ASSOC);
+                            $justificada = $val_justificadas['justificada'];
+                            
+                            if ($faltas - $justificada <= 1){
                                 $color = 'green';
-                            }elseif ($faltas == 2){
+                            }elseif ($faltas - $justificada == 2){
                                 $color = 'yellow';
-                            }else{
+                            }elseif ($faltas - $justificada > 2){
                                 $color = 'red';
                             } ?>
                             <tr height='30px'>
-                                <td style="background-color: <?php echo @$color;?>; width: 685px;" ><?php echo $values_select['nome']; ?></td>
-                                <?php if ($faltas == 3) {
-                                    echo '<td><a href="turma.php?pg=turma&op=visualizar&turma=9&aluno='.$cod_aluno.'&del=sim"><img width="30px" src="img/x.svg"</a></td>';
+                                <td style="background-color: <?php echo @$color;?>; width: 670px; border:1px solid #000;" ><?php echo $values_select['nome']; ?></td>
+                                <?php if ($faltas - $justificada == 3) {
+                                    echo '<td style="border:1px solid #000;"><a href="turma.php?pg=turma&op=visualizar&turma=9&aluno='.$cod_aluno.'&del=sim"><img width="30px" src="img/x.svg"</a></td>';
                                 } else {                                                                  
-                                    echo '<td></td>';
+                                    echo '<td style="border:1px solid #000;"></td>';
                                 } ?>
-                                <td><center><?php echo $faltas; ?></center></td>
+                                <td style="border:1px solid #000;"><center><?php echo $faltas; ?></center></td>
+                                <td style="border:1px solid #000;"><center><?php echo $justificada; ?></center></td>
                             </tr>
                         <?php } ?>
                     </table>
