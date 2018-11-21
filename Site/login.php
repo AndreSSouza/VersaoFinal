@@ -35,7 +35,7 @@ $erro = empty($_REQUEST['erro']) ? NULL : $_REQUEST['erro'];
                     </tr>
                     <tr>
                         <td>
-                            <input type="password" name="senha" title="Insire uma senha" />
+                            <input type="password" name="senha" title="Insira uma senha" />
                         </td>
                     </tr>
                     <tr>

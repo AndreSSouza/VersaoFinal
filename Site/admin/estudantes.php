@@ -119,9 +119,9 @@
 
                         $nome_post = $_POST['nome_aluno'];
                         $sexo_post = $_POST['sexo'];
-                        $email_post = $_POST['email'];
-                        $telefone_post = $_POST['telefone'];
-                        $celular_post = $_POST['celular'];
+                        $email_post = (trim($_POST['email'])) ?: NULL;
+                        $telefone_post = (trim($_POST['telefone'])) ?: NULL;
+                        $celular_post = (trim($_POST['celular'])) ?: NULL;
 
                         $update_inscricao = $crud->update('inscricao', 'nome_aluno = :nome, sexo_aluno = :sexo, email = :email, telefone_contato = :telefone, celular_contato = :celular', 'WHERE id_inscricao = :id_inscricao')->run([':nome' => $nome_post, ':sexo' => $sexo_post, ':email' => $email_post, ':telefone' => $telefone_post, ':celular' => $celular_post, ':id_inscricao' => $id_inscricao]);
 
@@ -177,9 +177,9 @@
                                 <td colspan="3"><center><strong><i>Contato</i></i></strong></center></td>
                             </tr>
                             <tr>						
-                                <td>E-mail</td>
-                                <td>Telefone</td>
-                                <td>Celular</td>
+                                <td>E-mail (opcional)</td>
+                                <td>Telefone (opcional)</td>
+                                <td>Celular (opcional)</td>
                             </tr>
                             <tr>						
                                 <td><input style="width:400px" type="email" name="email" value="<?php echo $email_inscricao; ?>"></td>
@@ -212,9 +212,9 @@
 
                         $nome_inscricao = $_POST['nome'];
                         $sexo = $_POST['sexo'];
-                        $email = $_POST['email'];
-                        $telefone = $_POST['telefone'];
-                        $celular = $_POST['celular'];
+                        $email = (trim($_POST['email'])) ?: NULL;
+                        $telefone = (trim($_POST['telefone'])) ?: NULL;
+                        $celular = (trim($_POST['celular'])) ?: NULL;
 
                         if (empty($nome_inscricao)) {
                             echo "<script language='javascript'>window.alert('Digite o nome do aluno');</script>";
@@ -273,9 +273,9 @@
                                 </td>      						
                             </tr>
                             <tr>
-                                <td>E-mail:</td>
-                                <td>Telefone:</td>
-                                <td>Celular:</td>
+                                <td>E-mail (opcional)</td>
+                                <td>Telefone (opcional)</td>
+                                <td>Celular (opcional)</td>
                             </tr>
                             <tr>
                                 <td>
@@ -794,8 +794,7 @@
                 $matriculado = $dados['matriculado'];
                 $dt_matricula = $dados['dt_matricula'];
                 $nome_turma = $dados['nome_turma'];
-                $cod_turma = $dados['id_turma'];
-                ?>
+                $cod_turma = $dados['id_turma']; ?>
                 <br><br>
 
                 <form method="post">
@@ -808,9 +807,9 @@
                             </td>
                         </tr>							
                         <tr>
-                            <td>Nome:</td>
-                            <td>Sexo:</td>
-                            <td>Data de nascimento:</td>
+                            <td>Nome</td>
+                            <td>Sexo</td>
+                            <td>Data de nascimento</td>
                         </tr>
                         <tr>
                             <td>
@@ -841,9 +840,9 @@
                             </td>
                         </tr>
                         <tr>								
-                            <td>RG:</td>
-                            <td>CPF:</td>
-                            <td>E-mail do Aluno:</td>
+                            <td>RG (opcional)</td>
+                            <td>CPF (opcional)</td>
+                            <td>E-mail do Aluno (opcional)</td>
                         </tr>
                         <tr>								
                             <td>
@@ -864,9 +863,9 @@
                             </td>
                         </tr>
                         <tr>								
-                            <td>Nome:</td>
-                            <td>Data de nascimento:</td>
-                            <td>Sexo:</td>
+                            <td>Nome</td>
+                            <td>Data de nascimento</td>
+                            <td>Sexo</td>
                         </tr>
                         <tr>							
                             <td>													
@@ -897,8 +896,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>RG:</td>
-                            <td>CPF:</td>
+                            <td>RG (opcional)</td>
+                            <td>CPF (opcional)</td>
                         </tr>
                         <tr>
                             <td>													
@@ -916,9 +915,9 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>E-mail do responsavel:</td>
-                            <td>Telefone para Contato:</td>
-                            <td>Celular para Contato:</td>
+                            <td>E-mail do responsavel (opcional)</td>
+                            <td>Telefone para Contato (opcional)</td>
+                            <td>Celular para Contato (opcional)</td>
                         </tr>
                         <tr>
                             <td>
@@ -939,9 +938,9 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Rua:</td>
-                            <td>Número:</td>
-                            <td>Bairro:</td>
+                            <td>Rua</td>
+                            <td>Número</td>
+                            <td>Bairro</td>
                         </tr>
                         <tr>
                             <td>
@@ -955,9 +954,9 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Cidade:</td>
-                            <td>Complemento:</td>
-                            <td>CEP:</td>
+                            <td>Cidade</td>
+                            <td>Complemento (opcional)</td>
+                            <td>CEP (opcional)</td>
                         </tr>
                         <tr>
                             <td>
@@ -991,23 +990,23 @@
                     $nomeA = $_POST['nomeA'];
                     $sexoA = $_POST['sexoA'];
                     $dtNascimentoA = $_POST['dtNascimentoA'];
-                    $rgA = $_POST['rgA'];
-                    $cpfA = $_POST['cpfA'];
-                    $emailA = $_POST['emailA'];
+                    $rgA = (trim($_POST['rgA'])) ?: NULL;
+                    $cpfA = (trim($_POST['cpfA'])) ?: NULL;
+                    $emailA = (trim($_POST['emailA'])) ?: NULL;
                     $nomeR = $_POST['nomeR'];
                     $dtNascimentoR = $_POST['dtNascResp'];
                     $sexoR = $_POST['sexoR'];
-                    $emailR = $_POST['emailR'];
-                    $rgR = $_POST['rgR'];
-                    $cpfR = $_POST['cpfR'];
-                    $telefoneR = $_POST['telefoneR'];
-                    $celularR = $_POST['celularR'];
+                    $emailR = (trim($_POST['emailR'])) ?: NULL;
+                    $rgR = (trim($_POST['rgR'])) ?: NULL;
+                    $cpfR = (trim($_POST['cpfR'])) ?: NULL;
+                    $telefoneR = (trim($_POST['telefoneR'])) ?: NULL;
+                    $celularR = (trim($_POST['celularR'])) ?: NULL;
                     $ruaA = $_POST['ruaA'];
                     $numeroA = $_POST['numeroA'];
                     $bairroA = $_POST['bairroA'];
                     $cidadeA = $_POST['cidadeA'];
-                    $complementoA = $_POST['complementoA'];
-                    $cepA = $_POST['cepA'];
+                    $complementoA = (trim($_POST['complementoA'])) ?: NULL;
+                    $cepA = (trim($_POST['cepA'])) ?: NULL;
 
                     if (($nomeA != $nome_A) || ($sexoA != $sexo_A) || ($dtNascimentoA != $data_nascimento_A) || ($rgA != $RG_A) || ($cpfA != $CPF_A) || ($emailA != $email_A) || ($nomeR != $nome_R) || ($sexoR != $sexo_R) || ($emailR != $email_R) || ($telefoneR != $telefone_R) || ($celularR != $celular_R) || ($ruaA != $rua_A) || ($numeroA != $numero_A) || ($dt_nascimento_R != $dtNascimentoR) || ($bairroA = $bairro_A) || ($cidadeA != $cidade_A) || ($complementoA != $complemento_A) || ($cepA != $cep_A)) {
 
@@ -1032,14 +1031,14 @@
                         
                         $id_aluno = $_GET['inscricao'];
                         $data_nascimento_aluno = $_POST['data_nascimento_aluno'];
-                        $rg_aluno = $_POST['rg_aluno'];                        
-                        $cpf_aluno = $_POST['cpf_aluno'];
+                        $rg_aluno = $_POST['rg_aluno'];
+                        $cpf_aluno = (trim($_POST['cpf_aluno'])) ?: NULL; 
                         $rua = $_POST['rua_aluno'];
                         $numero = $_POST['numero_aluno'];
                         $bairro_aluno = $_POST['bairro_aluno'];
                         $cidade_aluno = $_POST['cidade_aluno'];
-                        $complemento_aluno = $_POST['complemento_aluno'];
-                        $cep_aluno = $_POST['cep_aluno'];
+                        $complemento_aluno = (trim($_POST['complemento_aluno'])) ?: NULL;
+                        $cep_aluno= (trim($_POST['cep_aluno'])) ?: NULL;
                         $escolaridade = $_POST['escolaridade'];                        
                         $escola = $_POST['escola'];
                         
@@ -1056,9 +1055,9 @@
                     <form method="POST">
                         <table width="900" border="0">
                             <tr>
-                                <td>Código:</td>
-                                <td>Nome completo:</td>
-                                <td>Data de nascimento:</td>
+                                <td>Código</td>
+                                <td>Nome completo</td>
+                                <td>Data de nascimento</td>
                                 <td>RG:</td>
                             </tr>
                             <tr>
@@ -1076,9 +1075,9 @@
                                 <td><input type="text" title="Insira o RG" name="rg_aluno" maxlength="14"/></td>
                             </tr>
                             <tr>                                
-                                <td>CPF:</td>
-                                <td>Rua:</td>
-                                <td>Número:</td>
+                                <td>CPF (opcional)</td>
+                                <td>Rua</td>
+                                <td>Número</td>
                             </tr>
                             <tr>                                
                                 <td><input type="text" title="Insira o CPF" name="cpf_aluno" maxlength="11"/></td>
@@ -1086,9 +1085,9 @@
                                 <td><input type="text" title="Insira o número residêncial" maxlength="5" name="numero_aluno"/></td>
                             </tr>
                             <tr>														  	
-                                <td>Bairro:</td>
-                                <td>Cidade:</td>
-                                <td>Complemento:</td>
+                                <td>Bairro</td>
+                                <td>Cidade</td>
+                                <td>Complemento (opcional)</td>
                             </tr>
                             <tr>
                                 <td><input type="text" title="Insira o bairro" maxlength="60" name="bairro_aluno" /></td>
@@ -1096,9 +1095,9 @@
                                 <td><input type="text" title="Insire algun complemento" maxlength="100" name="complemento_aluno" /></td>
                             </tr>
                             <tr>
-                                <td>Cep:</td>
-                                <td>Escolaridade:</td>
-                                <td>Escola:</td> 
+                                <td>Cep (opcional)</td>
+                                <td>Escolaridade</td>
+                                <td>Escola</td> 
                             </tr>
                             <tr>								
                                 <td><input type="text" title="Insira o CEP" name="cep_aluno" maxlength="8" /></td>
@@ -1141,9 +1140,10 @@
                             $nome_responsavel = $_POST['nome_responsavel'];
                             $data_nascimento_responsavel = $_POST['data_nasc_resp'];
                             $sexo_responsavel = $_POST['sexo_responsavel'];
-                            $cpf_responsavel = $_POST['cpf_responsavel'];
-                            $rg_responsavel = $_POST['rg_responsavel'];
-                            $email_responsavel = $_POST['email_responsavel'];
+                            $cpf_responsavel = (trim($_POST['cpf_responsavel'])) ?: NULL; 
+                            $rg_responsavel = (trim($_POST['rg_responsavel'])) ?: NULL; 
+                            $email_responsavel = (trim($_POST['email_responsavel'])) ?: NULL; 
+                             
 
                             $insert_responsavel = $crud->insert('responsavel', 'nome_responsavel, data_nascimento_responsavel, sexo_responsavel, cpf, rg_responsavel, email', '(:nome, :data, :sexo, :cpf, :rg, :email)')->run([':nome' => $nome_responsavel, ':data' => $data_nascimento_responsavel, ':sexo' => $sexo_responsavel, ':cpf' => $cpf_responsavel, ':rg' => $rg_responsavel, ':email' => $email_responsavel]);
                             if ($insert_responsavel->rowCount() <= 0) {
@@ -1168,10 +1168,10 @@
                         <form method="POST">
                         <table width="900" border="0">
                             <tr>
-                                <td>Código do responsável:</td>			
-                                <td>Nome do responsável:</td>
-                                <td>Sexo do responsável:</td>
-                                <td>data de Nascimento do Responsavel:</td>
+                                <td>Código do responsável</td>			
+                                <td>Nome do responsável</td>
+                                <td>Sexo do responsável</td>
+                                <td>data de Nascimento do Responsavel</td>
                             </tr>
                             <tr>
                                 <td>
@@ -1188,9 +1188,9 @@
                                 </td>     
                             </tr>
                             <tr>
-                                <td>CPF do responsável:</td>
-                                <td>RG do responsável:</td>
-                                <td>E-mail do responsável:</td>
+                                <td>CPF do responsável</td>
+                                <td>RG do responsável</td>
+                                <td>E-mail do responsável</td>
                             </tr>
                             <tr>
                                 <td><input type="text" disabled value="<?php echo @$valores_responsavel['cpf'];?>" /></td>
@@ -1208,10 +1208,10 @@
                     <form name="form1" method="post">
                         <table width="900" border="0">
                             <tr>
-                                <td><b>Código do responsável:</b></td>			
-                                <td>Nome do responsável:</td>
-                                <td>Sexo do responsável:</td>
-                                <td>data de Nascimento do Responsavel:</td>
+                                <td><b>Código do responsável</b></td>			
+                                <td>Nome do responsável</td>
+                                <td>Sexo do responsável</td>
+                                <td>data de Nascimento do Responsavel</td>
                             </tr>
                             <tr>
                                 <?php 
@@ -1240,9 +1240,9 @@
                                 <td><input type="date" title="Selecione a data de nascimento do responsável" name="data_nasc_resp" /></td>     
                             </tr>
                             <tr>
-                                <td>CPF do responsável:</td>
-                                <td>RG do responsável:</td>
-                                <td>E-mail do responsável:</td>
+                                <td>CPF do responsável (opcional)</td>
+                                <td>RG do responsável (opcional)</td>
+                                <td>E-mail do responsável (opcional)</td>
                             </tr>
                             <tr>
                                 <td><input type="text" title="Insira o CPF do responsável" name="cpf_responsavel" maxlength="11"/></td>
@@ -1307,7 +1307,7 @@
                 <?php } // aqui fecha a etapa 3 ?>
                     
                 <?php if (@$_GET['etapa'] == 'resumo') { // aqui abre a etapa resumo ?>
-                    <h1>4º Passo - Mensagem de confirmação</h1>
+                    <h1>4º Passo - Aviso</h1>
                     <table>
                         <tr>
                             <td>
@@ -1384,27 +1384,30 @@
 
             <!BUSCANDO ESTUDANTES NO BANCO>
 
-            <?php if (@$_GET['pg'] == 'aluno') { ?>
+            <?php if (@$_GET['pg'] == 'aluno') { ?>                                                     
                 <table class="buttons_cadastra">
                     <tr>
-                        <td><a class="a2" title="Fazer o cadastro de um aluno" href="estudantes.php?pg=cadastra&etapa=1">Cadastrar alunos</a></td>
+                        <td>
+                            <?php if (@$_GET['mostra'] == 'inativo') { 
+                                $val_status = 0; ?>                    
+                                <a class='a2' style='color: white; background-color: #044c88;' href='estudantes.php?pg=aluno'>Mostrar Alunos Ativos</a>                    
+                            <?php } else { 
+                                $val_status = 1; ?>                    
+                                <a class='a2' style='color: white; background-color: #b93434;' href='estudantes.php?pg=aluno&mostra=inativo'>Mostrar Alunos Inativos</a>                    
+                            <?php }?>                            
+                        </td>
                         <td style="text-align: right; padding-right: 5px; color: #FFF;">Buscar:</td>
                         <td style="width: 240px;"><input id="txt_consulta" placeholder="Insira o nome, cpf, rg ou código aqui" type="text" style="border-radius: 8px; border: none;" /></td>
                     </tr>
-                </table>                
-                <h1>Alunos cadastradados</h1>
-                <?php if (@$_GET['mostra'] == 'inativo') { 
-                    $val_status = 0; ?>
-                    <a class='a2' style='color: white; background-color: #044c88;' href='estudantes.php?pg=aluno'>Mostrar Alunos Ativos</a>
-                <?php } else { 
-                    $val_status = 1; ?>
-                    <a class='a2' style='color: white; background-color: #b93434;' href='estudantes.php?pg=aluno&mostra=inativo'>Mostrar Alunos Inativos</a>
-                <?php }?>                
-                <br/><br/>
-                <?php $select_inscricao_aluno = $crud->select('*', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno WHERE i.nome_aluno IS NOT NULL AND status_aluno = ? ORDER BY i.nome_aluno')->run([$val_status]);
+                </table>
+                <h1>Alunos Cadastrados</h1>
+                </br>
+                
+                    
+                <?php $select_inscricao_aluno = $crud->select('a.id_aluno, i.nome_aluno, a.rg_aluno, a.cpf, i.telefone_contato, i.celular_contato', 'inscricao i', 'INNER JOIN aluno a ON i.id_inscricao = a.id_aluno WHERE i.nome_aluno IS NOT NULL AND status_aluno = ? ORDER BY i.nome_aluno')->run([$val_status]);
                 
                 if ($select_inscricao_aluno->rowCount() <= 0) { ?>
-                    <table width="900" border="0"><tr><td><h2>Ainda não existe nenhum registro</h2></td></tr></table>
+                    <table width="900" border="0"><tr><td><h2>Ainda não há nenhum registro</h2></td></tr></table>
                 <?php } else { ?>
                     <table width="900" border="0" id="tabela" class="bordasimples">
                         <thead>

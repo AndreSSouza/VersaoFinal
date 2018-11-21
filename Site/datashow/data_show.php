@@ -246,7 +246,7 @@
                         $id_prof_post = $_POST['professor']; 
                         $id_sala_post = $_POST['sala']; 
                         $data_reserva_post = $_POST['data_reserva']; 
-                        $obs_post = $_POST['obs'];
+                        $obs_post = (trim($_POST['obs'])) ?: NULL;
 
                         $insert_reserva = $crud->insert('reserva', 'id_sala, id_professor, data_reserva, obs', '(?, ?, ?, ?)')
                                                ->run([$id_sala_post, $id_prof_post, $data_reserva_post, $obs_post]);
@@ -364,8 +364,8 @@
 
                         $id_prof_post = $_POST['professor']; 
                         $id_sala_post = $_POST['sala']; 
-                        $data_reserva_post = $_POST['data_reserva']; 
-                        $obs_post = $_POST['obs'];
+                        $data_reserva_post = $_POST['data_reserva'];
+                        $obs_post = (trim($_POST['obs'])) ?: NULL;
 
                         if (($valores_reserva['id_professor'] != $id_prof_post) || ($valores_reserva['id_sala'] != $id_sala_post) || ($valores_reserva['data_reserva'] != $data_reserva_post) || ($valores_reserva['obs'] != $obs_post)) {
 
